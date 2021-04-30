@@ -1,6 +1,10 @@
-# ventasclothing
+# Ventas Clothing
 
-A new Flutter project.
+Proyecto final para el final de curso de Dasarollo de Aplicaciones Multiplataforma, una app de compra de una marca de ropa creada por mí.
+
+## Prototipo
+
+https://www.figma.com/proto/PVveK8UIMdnHGDWo0U0nzF/VENTAS-CLOTHING?node-id=1%3A8&scaling=scale-down&page-id=0%3A1
 
 ## Getting Started
 
