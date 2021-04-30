@@ -8,7 +8,7 @@
 .buildlog/
 .history
 .svn/
-**/android/app/src/googole-services.json
+**/android/app/googole-services.json
 
 # IntelliJ related
 *.iml
