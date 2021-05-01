@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ventasclothing/constants.dart';
-import 'package:ventasclothing/screens/home/home_screen.dart';
+import 'package:ventasclothing/screens/home/home.dart';
 
 void main() {
   runApp(MyApp());
@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Ventas Clothing',
       theme: ThemeData(
         textTheme: Theme.of(context).textTheme.apply(bodyColor: mainColorText),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeScreen(),
+      home: Home(),
     );
   }
 }
