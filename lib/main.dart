@@ -48,7 +48,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.blue,
         elevation: 1,
         toolbarHeight: 0,
       ),
@@ -62,18 +62,22 @@ class _HomeState extends State<Home> {
           BottomNavigationBarItem(
             icon: Icon(Icons.home, color: Colors.black),
             label: 'Home',
+            activeIcon: Icon(Icons.home, color: Colors.blue),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.apps, color: Colors.black),
             label: 'Categories',
+            activeIcon: Icon(Icons.apps, color: Colors.blue),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.shopping_cart, color: Colors.black),
             label: ('Cart'),
+            activeIcon: Icon(Icons.shopping_cart, color: Colors.blue),
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.account_circle, color: Colors.black),
             label: 'Profile',
+            activeIcon: Icon(Icons.account_circle, color: Colors.blue),
           )
         ],
         fixedColor: Colors.black,
