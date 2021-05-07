@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Ventas Clothing',
       theme: ThemeData(
-        textTheme: Theme.of(context).textTheme.apply(bodyColor: mainColorText),
+        textTheme: Theme.of(context).textTheme.apply(bodyColor: mainColor),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: Home(),
