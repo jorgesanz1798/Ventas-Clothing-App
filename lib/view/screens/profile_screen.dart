@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class CartScreen extends StatelessWidget {
+class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(children: [

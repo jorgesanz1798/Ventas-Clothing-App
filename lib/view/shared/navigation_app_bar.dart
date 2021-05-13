@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/screens/cart_screen_woab.dart';
 import 'package:ventasclothing/view/screens/categories_screen.dart';
 import 'package:ventasclothing/view/screens/home_screen.dart';
+import 'package:ventasclothing/view/screens/profile_screen.dart';
 
 class NavigationAppBar extends StatefulWidget {
   @override
@@ -13,8 +15,8 @@ class _NavigationAppBar extends State<NavigationAppBar> {
   List<Widget> _widgetOptions = <Widget>[
     HomeScreen(),
     CategoriesScreen(),
-    Text('Cart'),
-    Text('Profile'),
+    CartScreenWoab(),
+    ProfileScreen(),
   ];
 
   void _onItemTap(int index) {

@@ -1,51 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/widgets/categories.dart';
+import 'package:ventasclothing/view/widgets/grid_products.dart';
 
 class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView(children: [
-      Container(
-        margin: EdgeInsets.only(top: 25, left: 20, right: 20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              margin: EdgeInsets.only(top: 25, bottom: 25),
-              height: 80.0,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: [
-                  Category(
-                    imageLocation: 'assets/icons/camiseta.png',
-                    imageCaption: 'T-shirt',
-                  ),
-                  Category(
-                    imageLocation: 'assets/icons/chaqueta-con-bolsillos.png',
-                    imageCaption: 'Sweatshirt',
-                  ),
-                  Category(
-                    imageLocation: 'assets/icons/pantalon.png',
-                    imageCaption: 'Troussers',
-                  ),
-                  Category(
-                    imageLocation: 'assets/icons/pantalones-cortos.png',
-                    imageCaption: 'Shorts',
-                  ),
-                  Category(
-                    imageLocation: 'assets/icons/sueter-con-cremallera.png',
-                    imageCaption: 'Jacket',
-                  ),
-                  Category(
-                    imageLocation: 'assets/icons/gorra.png',
-                    imageCaption: 'Accesories',
-                  ),
-                ],
+    return ListView(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 25, left: 20, right: 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 15, bottom: 15),
+                height: 80.0,
+                child: categories,
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    ]);
+        Container(
+          margin: EdgeInsets.only(top: 25, left: 20, right: 20),
+          child: listProducts,
+        ),
+      ],
+    );
   }
 }
 
