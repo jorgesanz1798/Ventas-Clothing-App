@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'utils/view/theme_manager.dart';
 import 'view/shared/navigation_app_bar.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -24,7 +24,30 @@ class MyApp extends StatelessWidget {
         //initialRoute: productsOverviewRoute,
         title: ThemeManager.appName,
         theme: ThemeManager.lightTheme,
-        home: NavigationAppBar(),
+        home: FutureBuilder(
+          // Replace the 3 second delay with your initialization code:
+          future: Future.delayed(Duration(seconds: 3)),
+          builder: (context, AsyncSnapshot snapshot) {
+            // Show splash screen while waiting for app resources to load:
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return MaterialApp(
+                home: Scaffold(
+                    body: Center(
+                        child: Image.asset(
+                  "assets/images/logo-app.jpg",
+                  fit: BoxFit.fitHeight,
+                ))),
+                debugShowCheckedModeBanner: false,
+              );
+            } else {
+              // Loading is done, return the app:
+              return MaterialApp(
+                home: NavigationAppBar(),
+                debugShowCheckedModeBanner: false,
+              );
+            }
+          },
+        ),
       ),
     );
   }

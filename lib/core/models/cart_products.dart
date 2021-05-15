@@ -142,7 +142,6 @@ class SingleCartProduct extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Padding(padding: const EdgeInsets.only(top: 12)),
               Row(
                 children: [
                   Text("Size:"),
@@ -152,22 +151,37 @@ class SingleCartProduct extends StatelessWidget {
                   Text(cartProductColor),
                 ],
               ),
-              Padding(padding: const EdgeInsets.only(top: 12)),
-              Text("$cartProductPrice"),
+              Row(
+                children: [
+                  Text("$cartProductPrice"),
+                  new IconButton(
+                    icon: Icon(Icons.remove_circle),
+                    onPressed: () {},
+                  ),
+                  new Text("$cartProductQuantity"),
+                  new IconButton(
+                    icon: Icon(Icons.add_circle),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
             ],
           ),
           Padding(padding: const EdgeInsets.only(right: 25)),
           new Column(
             children: [
-              new IconButton(
-                icon: Icon(Icons.arrow_drop_up),
-                onPressed: () {},
-              ),
-              new Text("$cartProductQuantity"),
-              new IconButton(
-                icon: Icon(Icons.arrow_drop_down),
-                onPressed: () {},
-              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: new IconButton(
+                    icon: Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
+                    onPressed: () {},
+                  ),
+                ),
+              )
             ],
           ),
         ],

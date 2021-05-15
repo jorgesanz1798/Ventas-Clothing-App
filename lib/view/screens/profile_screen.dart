@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ventasclothing/view/screens/login_screen.dart';
+import 'package:ventasclothing/view/screens/signin_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
@@ -20,7 +20,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               onPressed: () => Navigator.of(context).push(
                 new MaterialPageRoute(
-                  builder: (context) => new Login(),
+                  builder: (context) => new Signin(),
                 ),
               ),
             ),

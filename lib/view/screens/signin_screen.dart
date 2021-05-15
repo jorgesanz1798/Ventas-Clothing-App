@@ -1,11 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_view.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:ventasclothing/core/providers/google_auth.dart';
+import 'package:ventasclothing/utils/core/auth_service.dart';
+import 'package:ventasclothing/view/screens/signup_screen.dart';
 
-class Login extends StatefulWidget {
+class Signin extends StatefulWidget {
   @override
-  _LoginState createState() => _LoginState();
+  _SigninState createState() => _SigninState();
 }
 
-class _LoginState extends State<Login> {
+class _SigninState extends State<Signin> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController _email = TextEditingController();
@@ -44,7 +50,7 @@ class _LoginState extends State<Login> {
                           height: 40,
                         ),
                         Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.only(top: 150, bottom: 25),
                           child: Container(
                             alignment: Alignment.topCenter,
                             child: Image.network(
@@ -53,7 +59,6 @@ class _LoginState extends State<Login> {
                             ),
                           ),
                         ),
-
                         Padding(
                           padding:
                               const EdgeInsets.fromLTRB(14.0, 8.0, 14.0, 8.0),
@@ -115,23 +120,23 @@ class _LoginState extends State<Login> {
                         ),
                         Padding(
                           padding:
-                              const EdgeInsets.fromLTRB(14.0, 8.0, 14.0, 8.0),
+                              const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
                           child: Material(
-                              borderRadius: BorderRadius.circular(20.0),
-                              color: Colors.black,
-                              elevation: 0.0,
-                              child: MaterialButton(
-                                onPressed: () {},
-                                minWidth: MediaQuery.of(context).size.width,
-                                child: Text(
-                                  "Login",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20.0),
-                                ),
-                              )),
+                            color: Colors.transparent,
+                            child: MaterialButton(
+                              color: Colors.blue,
+                              onPressed: () {},
+                              minWidth: MediaQuery.of(context).size.width,
+                              child: Text(
+                                "Sign in",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0),
+                              ),
+                            ),
+                          ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -150,7 +155,10 @@ class _LoginState extends State<Login> {
                             Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: InkWell(
-                                    onTap: () {},
+                                    onTap: () => Navigator.of(context).push(
+                                        new MaterialPageRoute(
+                                            builder: (BuildContext context) =>
+                                                new Signup())),
                                     child: Text(
                                       "Create an account",
                                       textAlign: TextAlign.center,
@@ -158,28 +166,45 @@ class _LoginState extends State<Login> {
                                     ))),
                           ],
                         ),
-
-//                        Padding(
-//                          padding: const EdgeInsets.all(16.0),
-//                          child: Row(
-//                            mainAxisAlignment: MainAxisAlignment.center,
-//                            children: <Widget>[
-//
-//                              Padding(
-//                                padding: const EdgeInsets.all(8.0),
-//                                child: Text("or sign in with", style: TextStyle(fontSize: 18,color: Colors.grey),),
-//                              ),
-//                              Padding(
-//                                padding: const EdgeInsets.all(8.0),
-//                                child: MaterialButton(
-//                                    onPressed: () {},
-//                                    child: Image.asset("images/ggg.png", width: 30,)
-//                                ),
-//                              ),
-//
-//                            ],
-//                          ),
-//                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(40.0, 20.0, 40.0, 20.0),
+                          child: SignInButton(
+                            Buttons.Google,
+                            onPressed: () async {
+                              User? user =
+                                  await GoogleAuthService.signInWithGoogle(
+                                      context: context);
+                              if (user != null) {
+                                AuthService _authentication = AuthService();
+                                _authentication.addUser(user.uid);
+                              }
+                            },
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: MaterialButton(
+                              color: Colors.blue,
+                              onPressed: () async {
+                                await GoogleAuthService.signOutWithGoogle(
+                                    context: context);
+                              },
+                              minWidth: MediaQuery.of(context).size.width,
+                              child: Text(
+                                "Sign in",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20.0),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     )),
               ),
