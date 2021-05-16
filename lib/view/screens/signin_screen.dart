@@ -5,6 +5,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:ventasclothing/core/providers/google_auth.dart';
 import 'package:ventasclothing/utils/core/auth_service.dart';
 import 'package:ventasclothing/view/screens/signup_screen.dart';
+import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
 
 class Signin extends StatefulWidget {
   @override
@@ -178,31 +179,12 @@ class _SigninState extends State<Signin> {
                               if (user != null) {
                                 AuthService _authentication = AuthService();
                                 _authentication.addUser(user.uid);
+                                Navigator.of(context).push(
+                                  new MaterialPageRoute(
+                                      builder: (context) => NavigationAppBar()),
+                                );
                               }
                             },
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
-                          child: Material(
-                            color: Colors.transparent,
-                            child: MaterialButton(
-                              color: Colors.blue,
-                              onPressed: () async {
-                                await GoogleAuthService.signOutWithGoogle(
-                                    context: context);
-                              },
-                              minWidth: MediaQuery.of(context).size.width,
-                              child: Text(
-                                "Sign in",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0),
-                              ),
-                            ),
                           ),
                         ),
                       ],
