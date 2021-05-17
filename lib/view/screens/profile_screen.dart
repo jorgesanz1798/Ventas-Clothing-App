@@ -26,7 +26,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     accountEmail: Text("${_user.email}"),
                     currentAccountPicture: GestureDetector(
                       child: new CircleAvatar(
-                        backgroundColor: Colors.grey,
+                        radius: 30.0,
+                        backgroundImage: NetworkImage(
+                          "${_user.photoURL}",
+                        ),
                       ),
                     ),
                   ),

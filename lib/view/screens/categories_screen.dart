@@ -44,7 +44,7 @@ class Category extends StatelessWidget {
         child: Container(
           width: 100.0,
           child: ListTile(
-            title: Image.asset(
+            title: Image.network(
               imageLocation,
               width: 100.0,
               height: 60.0,

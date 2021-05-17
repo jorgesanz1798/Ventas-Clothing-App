@@ -44,12 +44,40 @@ class _SignupState extends State<Signup> {
                           height: 40,
                         ),
                         Padding(
-                          padding: const EdgeInsets.only(top: 50, bottom: 25),
+                          padding: const EdgeInsets.only(top: 150, bottom: 25),
                           child: Container(
                             alignment: Alignment.topCenter,
                             child: Image.network(
                               'https://firebasestorage.googleapis.com/v0/b/ventas-clothing-app.appspot.com/o/banner.png?alt=media&token=239ae3d4-f01a-4e71-b211-cc7251caf40b',
                               scale: 8.0,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.fromLTRB(14.0, 8.0, 14.0, 8.0),
+                          child: Material(
+                            borderRadius: BorderRadius.circular(10.0),
+                            color: Colors.grey.withOpacity(0.3),
+                            elevation: 0.0,
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 12.0),
+                              child: TextFormField(
+                                controller: _password,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Name",
+                                  icon: Icon(Icons.person_outline),
+                                ),
+                                validator: (value) {
+                                  if (value!.isEmpty) {
+                                    return "The user's name field cannot be empty";
+                                  } else if (value.length < 6) {
+                                    return "the user's name has to be at least 6 characters long";
+                                  }
+                                  return null;
+                                },
+                              ),
                             ),
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'utils/view/theme_manager.dart';
 import 'view/shared/navigation_app_bar.dart';
@@ -32,11 +33,14 @@ class MyApp extends StatelessWidget {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return MaterialApp(
                 home: Scaffold(
-                    body: Center(
-                        child: Image.asset(
-                  "assets/images/logo-app.jpg",
-                  fit: BoxFit.fitHeight,
-                ))),
+                  body: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 40, left: 40),
+                      child: SvgPicture.asset(
+                          "assets/images/Logo-VC-original.svg"),
+                    ),
+                  ),
+                ),
                 debugShowCheckedModeBanner: false,
               );
             } else {
