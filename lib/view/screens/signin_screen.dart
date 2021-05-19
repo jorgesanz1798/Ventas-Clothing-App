@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:ventasclothing/core/providers/google_auth.dart';
-import 'package:ventasclothing/utils/core/auth_service.dart';
+import 'package:ventasclothing/utils/core/google_auth.dart';
+import 'package:ventasclothing/core/providers/auth_service.dart';
 import 'package:ventasclothing/view/screens/signup_screen.dart';
 import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
 

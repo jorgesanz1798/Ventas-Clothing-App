@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(right: 40, left: 40),
                       child: SvgPicture.asset(
-                          "assets/images/Logo-VC-original.svg"),
+                        "assets/images/Logo-VC-original.svg",
+                      ),
                     ),
                   ),
                 ),

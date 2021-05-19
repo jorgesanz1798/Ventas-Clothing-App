@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ventasclothing/core/providers/google_auth.dart';
+import 'package:ventasclothing/utils/core/google_auth.dart';
 import 'package:ventasclothing/view/screens/signin_screen.dart';
 import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
 

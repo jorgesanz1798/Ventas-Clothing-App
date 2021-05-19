@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/core/models/products.dart';
 import 'package:ventasclothing/view/widgets/categories.dart';
-import 'package:ventasclothing/view/widgets/grid_products.dart';
 
 class CategoriesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
+    return Column(
+      children: [
         Container(
           margin: EdgeInsets.only(top: 25, left: 20, right: 20),
           child: Column(
@@ -20,9 +20,8 @@ class CategoriesScreen extends StatelessWidget {
             ],
           ),
         ),
-        Container(
-          margin: EdgeInsets.only(top: 25, left: 20, right: 20),
-          child: listProducts,
+        Expanded(
+          child: Products(),
         ),
       ],
     );

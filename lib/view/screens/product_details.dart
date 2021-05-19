@@ -7,12 +7,12 @@ class ProductDetails extends StatefulWidget {
   final productDetailImage;
   final productDetailOldPrice;
 
-  ProductDetails({
+  ProductDetails(
     this.productDetailName,
     this.productDetailImage,
     this.productDetailPrice,
     this.productDetailOldPrice,
-  });
+  );
 
   @override
   _ProductDetailsState createState() => _ProductDetailsState();
@@ -48,7 +48,7 @@ class _ProductDetailsState extends State<ProductDetails> {
               child: Container(
                 padding: const EdgeInsets.only(top: 20),
                 color: Colors.white,
-                child: Image.asset(widget.productDetailImage),
+                child: Image.network(widget.productDetailImage),
               ),
             ),
           ),
