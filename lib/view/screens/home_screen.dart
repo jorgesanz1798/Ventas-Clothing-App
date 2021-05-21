@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ventasclothing/view/widgets/grid_products.dart';
 import 'package:ventasclothing/view/widgets/main_carrousel.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -51,7 +50,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(left: 20, right: 20),
-          child: listProducts,
+          child: Text('Productos mas vendidos'),
         ),
       ],
     );

@@ -155,14 +155,10 @@ class SingleCartProduct extends StatelessWidget {
                 children: [
                   Text("$cartProductPrice"),
                   new IconButton(
-                    icon: Icon(Icons.remove_circle),
-                    onPressed: () {},
-                  ),
+                      icon: Icon(Icons.remove_circle), onPressed: () {}),
                   new Text("$cartProductQuantity"),
                   new IconButton(
-                    icon: Icon(Icons.add_circle),
-                    onPressed: () {},
-                  ),
+                      icon: Icon(Icons.add_circle), onPressed: () {}),
                 ],
               ),
             ],

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/screens/product_details.dart';
 
 class Products extends StatefulWidget {
   @override
@@ -23,13 +24,17 @@ class _ProductsState extends State<Products> {
             crossAxisCount: 2,
             children: snapshot.data!.docs.map(
               (document) {
+                var nameTshirt = document['name'];
+                var priceTshirt = document['price'];
+                var oldPriceTshirt = document['old_price'];
+                var imagenTshirt = document['imagen'];
                 return InkWell(
-                  /*onTap: () => Navigator.of(context).push(
+                  onTap: () => Navigator.of(context).push(
                     new MaterialPageRoute(
-                      builder: (context) =>
-                          new ProductDetails("${document.data()}"),
+                      builder: (context) => new ProductDetails(nameTshirt,
+                          oldPriceTshirt, priceTshirt, imagenTshirt),
                     ),
-                  ),*/
+                  ),
                   child: Card(
                     elevation: 1.0,
                     child: Container(
@@ -45,7 +50,7 @@ class _ProductsState extends State<Products> {
                             color: Colors.white70,
                             child: ListTile(
                               title: Text(
-                                "${document['name']}",
+                                "$nameTshirt",
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 15,
