@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorite_button/favorite_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:ventasclothing/view/screens/cart_screen_wab.dart';
@@ -56,6 +58,32 @@ class _ProductDetailsState extends State<ProductDetails> {
     });
   }
 
+  Future<void> saveFavourite() {
+    CollectionReference _favourite =
+        FirebaseFirestore.instance.collection('favourite');
+    User? _user = FirebaseAuth.instance.currentUser;
+    return _favourite
+        .add({
+          'product': [widget.name],
+          'user': _user!.uid,
+        })
+        .then((value) => print('Add to favourite'))
+        .catchError((error) => print('Failed to add product'));
+  }
+
+  Future<void> addToCart() {
+    CollectionReference _favourite =
+        FirebaseFirestore.instance.collection('cart');
+    User? _user = FirebaseAuth.instance.currentUser;
+    return _favourite
+        .add({
+          'product': [widget.name],
+          'user': _user!.uid,
+        })
+        .then((value) => print('Add to favourite'))
+        .catchError((error) => print('Failed to add product'));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,7 +127,9 @@ class _ProductDetailsState extends State<ProductDetails> {
               ),
               Expanded(
                 child: MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    addToCart();
+                  },
                   color: Colors.blue,
                   textColor: Colors.white,
                   elevation: 0.2,
@@ -124,9 +154,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                 child: Container(
                   height: 400,
                   child: PhotoView(
-                    /*NetworkImage("$colorTshirt")*/
-                    imageProvider:
-                        AssetImage("assets/images/originalWhite.png"),
+                    imageProvider: NetworkImage("$colorTshirt"),
+                    /*AssetImage("assets/images/originalWhite.png")*/
                     backgroundDecoration: BoxDecoration(
                       color: Colors.white,
                     ),
@@ -156,6 +185,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                     new FavoriteButton(
                       isFavorite: false,
                       valueChanged: (_isFavorite) {
+                        saveFavourite();
                         print('Is Favorite : $_isFavorite');
                       },
                     ),

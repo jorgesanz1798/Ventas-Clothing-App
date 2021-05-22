@@ -47,8 +47,8 @@ class _SignupState extends State<Signup> {
                           padding: const EdgeInsets.only(top: 150, bottom: 25),
                           child: Container(
                             alignment: Alignment.topCenter,
-                            child: Image.network(
-                              'https://firebasestorage.googleapis.com/v0/b/ventas-clothing-app.appspot.com/o/banner.png?alt=media&token=239ae3d4-f01a-4e71-b211-cc7251caf40b',
+                            child: Image.asset(
+                              'assets/images/banner.png',
                               scale: 8.0,
                             ),
                           ),
@@ -63,6 +63,7 @@ class _SignupState extends State<Signup> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 12.0),
                               child: TextFormField(
+                                obscureText: true,
                                 controller: _password,
                                 decoration: InputDecoration(
                                   border: InputBorder.none,

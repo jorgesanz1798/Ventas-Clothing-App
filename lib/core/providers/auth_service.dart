@@ -6,6 +6,7 @@ class AuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
   User? user = FirebaseAuth.instance.currentUser;
   CollectionReference users = FirebaseFirestore.instance.collection('users');
+  CollectionReference cart = FirebaseFirestore.instance.collection('cart');
 
   Future<void> addUser(uid) async {
     await users.get().then(
