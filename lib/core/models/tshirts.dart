@@ -1,18 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:ventasclothing/view/screens/product_details.dart';
+import 'package:ventasclothing/view/screens/tshirts_details.dart';
 import 'package:ventasclothing/view/widgets/card_products.dart';
 
-class Products extends StatefulWidget {
+class Tshirts extends StatefulWidget {
   @override
-  _ProductsState createState() => _ProductsState();
+  _TshirtsState createState() => _TshirtsState();
 }
 
-class _ProductsState extends State<Products> {
+class _TshirtsState extends State<Tshirts> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-      stream: FirebaseFirestore.instance.collection('camisetas').snapshots(),
+      stream: FirebaseFirestore.instance
+          .collection('camisetas')
+          .where("categoria" == "camisetas")
+          .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {
           return Center(
@@ -29,11 +32,22 @@ class _ProductsState extends State<Products> {
                 var priceTshirt = document['price'];
                 var oldPriceTshirt = document['old_price'];
                 var imagenTshirt = document['imagen'];
+                var stock = document['stock'];
+                var description = document['description'];
+                var size = document['size'];
+                var color = document['color'];
                 return InkWell(
                     onTap: () => Navigator.of(context).push(
                           new MaterialPageRoute(
-                            builder: (context) => new ProductDetails(nameTshirt,
-                                oldPriceTshirt, priceTshirt, imagenTshirt),
+                            builder: (context) => new TshirtDetails(
+                                nameTshirt,
+                                oldPriceTshirt,
+                                priceTshirt,
+                                imagenTshirt,
+                                stock,
+                                description,
+                                size,
+                                color),
                           ),
                         ),
                     child: CardProduct(document['imagen'][0], nameTshirt,

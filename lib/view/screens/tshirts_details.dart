@@ -6,19 +6,24 @@ import 'package:photo_view/photo_view.dart';
 import 'package:ventasclothing/view/screens/cart_screen_wab.dart';
 
 // ignore: must_be_immutable
-class ProductDetails extends StatefulWidget {
+class TshirtDetails extends StatefulWidget {
   final String name;
   final int oldPrice;
   final double price;
   List image = [];
+  List color = [];
+  List size = [];
+  List stock = [];
+  final String description;
 
-  ProductDetails(this.name, this.oldPrice, this.price, this.image);
+  TshirtDetails(this.name, this.oldPrice, this.price, this.image, this.stock,
+      this.description, this.size, this.color);
 
   @override
-  _ProductDetailsState createState() => _ProductDetailsState();
+  _TshirtDetailsState createState() => _TshirtDetailsState();
 }
 
-class _ProductDetailsState extends State<ProductDetails> {
+class _TshirtDetailsState extends State<TshirtDetails> {
   var colorTshirt;
   bool favourite = false;
 

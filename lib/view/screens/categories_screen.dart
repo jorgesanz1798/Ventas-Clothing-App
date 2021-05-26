@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ventasclothing/core/models/products.dart';
+import 'package:ventasclothing/core/models/tshirts.dart';
 
 class CategoriesScreen extends StatefulWidget {
   CategoriesScreen();
@@ -13,12 +13,12 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   @override
   void initState() {
     super.initState();
-    categorySelected = Products();
+    categorySelected = Tshirts();
   }
 
   void changeToTshirt() {
     setState(() {
-      categorySelected = Products();
+      categorySelected = Tshirts();
     });
   }
 

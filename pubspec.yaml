@@ -27,20 +27,15 @@ dependencies:
   cloud_firestore: ^2.0.0
   cupertino_icons: ^1.0.2
   favorite_button: ^0.0.4
-  firebase: ^9.0.1
   firebase_auth: ^1.1.4
   firebase_core: ^1.1.1
-  firebase_database: ^6.1.2
-  firebase_storage: ^8.0.5
   flutter_launcher_icons: ^0.9.0
-  flutter_native_splash: ^1.1.8+4
   flutter_signin_button: ^2.0.0
   flutter_svg: ^0.22.0
   fluttertoast: ^8.0.6
   google_sign_in: ^5.0.3
   photo_view: ^0.11.1
   provider: ^5.0.0
-  shared_preferences: ^2.0.5
 
 flutter_icons:
   image_path: "assets/images/logo-app.jpg"

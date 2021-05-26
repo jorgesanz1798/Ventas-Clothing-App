@@ -50,7 +50,7 @@ class HomeScreen extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(left: 20, right: 20),
-          child: Text('Productos mas vendidos'),
+          child: Text('See more ...'),
         ),
       ],
     );
