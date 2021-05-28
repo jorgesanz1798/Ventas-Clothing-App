@@ -28,15 +28,21 @@ class _CartProductsState extends State<CartProducts> {
           }
           if (snapshot.data!.docs.isEmpty) {
             return Padding(
-              padding: const EdgeInsets.only(top: 150),
+              padding: const EdgeInsets.only(top: 200),
               child: Center(
                 child: Column(
                   children: [
-                    Text('Cart empty'),
                     Icon(
                       Icons.shopping_cart,
                       color: Colors.black,
                       size: 100,
+                    ),
+                    Text(
+                      'Cart empty',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 ),
@@ -57,13 +63,14 @@ class _CartProductsState extends State<CartProducts> {
                   var color = document['color'];
                   var imagenProduct = document['image'];
                   var priceProduct = document['price'];
+                  var quantity = document['quantity'];
                   return new SingleCartProduct(
                     cartProductName: nameProduct,
                     cartProductImage: imagenProduct,
                     cartProductPrice: priceProduct,
                     cartProductColor: color,
                     cartProductSize: size,
-                    cartProductQuantity: 1,
+                    cartProductQuantity: quantity,
                   );
                 },
               ).toList(),
@@ -103,6 +110,38 @@ class SingleCartProduct extends StatelessWidget {
         .get()
         .then((querySnapshot) {
       querySnapshot.docs.forEach((doc) => {doc.reference.delete()});
+    });
+  }
+
+  void addToCount() {
+    CollectionReference _cart = FirebaseFirestore.instance.collection('cart');
+    User? _user = FirebaseAuth.instance.currentUser;
+    _cart
+        .where("product", isEqualTo: "$cartProductName")
+        .where("color", isEqualTo: "$cartProductColor")
+        .where("size", isEqualTo: "$cartProductSize")
+        .where("user", isEqualTo: "${_user!.uid}")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) => {
+            doc.reference.update({'quantity': doc['quantity'] + 1})
+          });
+    });
+  }
+
+  void substractToCount() {
+    CollectionReference _cart = FirebaseFirestore.instance.collection('cart');
+    User? _user = FirebaseAuth.instance.currentUser;
+    _cart
+        .where("product", isEqualTo: "$cartProductName")
+        .where("color", isEqualTo: "$cartProductColor")
+        .where("size", isEqualTo: "$cartProductSize")
+        .where("user", isEqualTo: "${_user!.uid}")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) => {
+            doc.reference.update({'quantity': doc['quantity'] - 1})
+          });
     });
   }
 
@@ -150,10 +189,17 @@ class SingleCartProduct extends StatelessWidget {
                     children: [
                       Text("$cartProductPrice"),
                       new IconButton(
-                          icon: Icon(Icons.remove_circle), onPressed: () {}),
+                        icon: Icon(Icons.remove_circle),
+                        onPressed: () {
+                          if (cartProductQuantity > 1) {
+                            substractToCount();
+                          }
+                        },
+                      ),
                       new Text("$cartProductQuantity"),
                       new IconButton(
-                          icon: Icon(Icons.add_circle), onPressed: () {}),
+                          icon: Icon(Icons.add_circle),
+                          onPressed: () => addToCount()),
                     ],
                   ),
                 ],

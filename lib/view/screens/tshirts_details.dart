@@ -105,7 +105,16 @@ class _TshirtDetailsState extends State<TshirtDetails> {
           'productName': widget.name,
           'user': _user!.uid,
         })
-        .then((value) => print('Add to favourite'))
+        .then((value) => Fluttertoast.showToast(
+              msg: "Product added to favourites",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            ))
+        // ignore: invalid_return_type_for_catch_error
         .catchError((error) => print('Failed to add product'));
   }
 
@@ -120,6 +129,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
           'image': widget.image[_imageSelected],
           'price': widget.price,
           'user': _user!.uid,
+          'quantity': 1,
         })
         .then((value) => Fluttertoast.showToast(
               msg: "Product added to cart",
