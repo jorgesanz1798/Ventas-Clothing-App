@@ -14,7 +14,7 @@ class _TshirtsState extends State<Tshirts> {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('camisetas')
-          .where("categoria" == "camisetas")
+          .where("categoria", isEqualTo: "camisetas")
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {

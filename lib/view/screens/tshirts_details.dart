@@ -26,6 +26,30 @@ class TshirtDetails extends StatefulWidget {
 class _TshirtDetailsState extends State<TshirtDetails> {
   var colorTshirt;
   bool favourite = false;
+  var _sizeSelected;
+  var _colorSelected;
+  var _imageSelected;
+
+  void onSizeSelected(String size) {
+    setState(() {
+      _sizeSelected = size;
+      print(_sizeSelected);
+    });
+  }
+
+  void onColorSelected(String color) {
+    setState(() {
+      _colorSelected = color;
+      print(_colorSelected);
+    });
+  }
+
+  void onImageSelected(option) {
+    setState(() {
+      _imageSelected = option;
+      print(_imageSelected);
+    });
+  }
 
   @override
   void initState() {
@@ -36,24 +60,32 @@ class _TshirtDetailsState extends State<TshirtDetails> {
   void changeToWhite() {
     setState(() {
       colorTshirt = widget.image[0];
+      onColorSelected(widget.color[0]);
+      onImageSelected(0);
     });
   }
 
   void changeToBlack() {
     setState(() {
       colorTshirt = widget.image[1];
+      onColorSelected(widget.color[1]);
+      onImageSelected(1);
     });
   }
 
   void changeToBlue() {
     setState(() {
       colorTshirt = widget.image[2];
+      onColorSelected(widget.color[2]);
+      onImageSelected(2);
     });
   }
 
   void changeToRed() {
     setState(() {
       colorTshirt = widget.image[3];
+      onColorSelected(widget.color[3]);
+      onImageSelected(3);
     });
   }
 
@@ -69,7 +101,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
     User? _user = FirebaseAuth.instance.currentUser;
     return _favourite
         .add({
-          'product': [widget.name],
+          'productName': widget.name,
           'user': _user!.uid,
         })
         .then((value) => print('Add to favourite'))
@@ -77,15 +109,20 @@ class _TshirtDetailsState extends State<TshirtDetails> {
   }
 
   Future<void> addToCart() {
-    CollectionReference _favourite =
-        FirebaseFirestore.instance.collection('cart');
+    CollectionReference _cart = FirebaseFirestore.instance.collection('cart');
     User? _user = FirebaseAuth.instance.currentUser;
-    return _favourite
+    return _cart
         .add({
-          'product': [widget.name],
+          'product': [
+            widget.name,
+            _sizeSelected,
+            _colorSelected,
+            widget.image[_imageSelected],
+            widget.price,
+          ],
           'user': _user!.uid,
         })
-        .then((value) => print('Add to favourite'))
+        .then((value) => print("Document written with ID: " + value.id))
         .catchError((error) => print('Failed to add product'));
   }
 
@@ -171,52 +208,57 @@ class _TshirtDetailsState extends State<TshirtDetails> {
               ),
             ),
           ),
-          Expanded(
-            child: new Container(
-              color: Colors.white,
-              child: ListTile(
-                title: Row(
-                  children: [
-                    Text(
-                      "${widget.name}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
+          Flex(
+            direction: Axis.horizontal,
+            children: [
+              Expanded(
+                child: new Container(
+                  color: Colors.white,
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Text(
+                          "${widget.name}",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 75, right: 75),
+                        ),
+                        new FavoriteButton(
+                          isFavorite: false,
+                          valueChanged: (_isFavorite) {
+                            saveFavourite();
+                            print('Is Favorite : $_isFavorite');
+                          },
+                        ),
+                      ],
+                    ),
+                    subtitle: Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: new Text(
+                          "${widget.price}",
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 75, right: 75),
-                    ),
-                    new FavoriteButton(
-                      isFavorite: false,
-                      valueChanged: (_isFavorite) {
-                        saveFavourite();
-                        print('Is Favorite : $_isFavorite');
-                      },
-                    ),
-                  ],
+                      new Text(
+                        "${widget.oldPrice}",
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: Colors.red,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ]),
+                  ),
                 ),
-                subtitle: Row(children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: new Text(
-                      "${widget.price}",
-                      style: TextStyle(
-                        fontSize: 13,
-                      ),
-                    ),
-                  ),
-                  new Text(
-                    "${widget.oldPrice}",
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      color: Colors.red,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ]),
               ),
-            ),
+            ],
           ),
           Container(
             color: Colors.white,
@@ -260,57 +302,52 @@ class _TshirtDetailsState extends State<TshirtDetails> {
               padding: const EdgeInsets.all(8),
             ),
           ),
-          Container(
-            height: 30,
-            color: Colors.white,
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Container(
+              height: 40,
+              color: Colors.white,
+              child: Row(
+                children: List.generate(
+                  widget.size.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Material(
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(3),
+                        onTap: () {
+                          print(widget.size[index]);
+                          onSizeSelected(widget.size[index]);
+                        },
+                        child: Ink(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: _sizeSelected == widget.size[index]
+                                ? Colors.blue
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(3),
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              widget.size[index],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6!
+                                  .copyWith(
+                                      color: _sizeSelected == widget.size[index]
+                                          ? Colors.white
+                                          : Colors.black87),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                Row(children: [
-                  new Text("Size:"),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                  ),
-                  Container(
-                    width: 25,
-                    height: 25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1.0),
-                    ),
-                    child: Text('S'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                  ),
-                  Container(
-                    width: 25,
-                    height: 25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1.0),
-                    ),
-                    child: Text('M'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                  ),
-                  Container(
-                    width: 25,
-                    height: 25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1.0),
-                    ),
-                    child: Text('L'),
-                  ),
-                ]),
-              ],
+              ),
             ),
           ),
           Container(

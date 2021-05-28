@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/core/models/sweatshirts.dart';
 import 'package:ventasclothing/core/models/tshirts.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -24,7 +25,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void changeToSweatshirt() {
     setState(() {
-      categorySelected = Center(child: Text('Sweatshirt'));
+      categorySelected = Sweatshirts();
     });
   }
 

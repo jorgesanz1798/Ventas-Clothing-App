@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ventasclothing/utils/core/google_auth.dart';
 import 'package:ventasclothing/view/screens/signin_screen.dart';
 import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
@@ -45,6 +46,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 color: Colors.blue,
                 onPressed: () async {
                   await GoogleAuthService.signOutWithGoogle(context: context);
+                  Fluttertoast.showToast(
+                    msg: "Session closed",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    timeInSecForIosWeb: 1,
+                    backgroundColor: Colors.red,
+                    textColor: Colors.white,
+                    fontSize: 16.0,
+                  );
                   Navigator.of(context).push(
                     new MaterialPageRoute(
                       builder: (context) => NavigationAppBar(),

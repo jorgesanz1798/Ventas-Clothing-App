@@ -26,12 +26,21 @@ class SweatshirtsDetails extends StatefulWidget {
 }
 
 class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
-  var colorTshirt;
+  var _colorSweatshirt;
+  var _sizeSelected;
   bool favourite = false;
 
   void favouriteTshirt() {
     setState(() {
       favourite = true;
+    });
+  }
+
+  void onSizeSelected(String size) {
+    //print("pasado" + this._sizeSelected);
+    setState(() {
+      this._sizeSelected = size;
+      print("Talla" + _sizeSelected);
     });
   }
 
@@ -49,15 +58,21 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
   }
 
   Future<void> addToCart() {
-    CollectionReference _favourite =
-        FirebaseFirestore.instance.collection('cart');
+    _colorSweatshirt = widget.color[0];
+    CollectionReference _cart = FirebaseFirestore.instance.collection('cart');
     User? _user = FirebaseAuth.instance.currentUser;
-    return _favourite
+    return _cart
         .add({
-          'product': [widget.name],
+          'product': [
+            widget.name,
+            _sizeSelected,
+            _colorSweatshirt,
+            widget.image[0],
+            widget.price,
+          ],
           'user': _user!.uid,
         })
-        .then((value) => print('Add to favourite'))
+        .then((value) => print('Add to cart'))
         .catchError((error) => print('Failed to add product'));
   }
 
@@ -167,115 +182,112 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
               ),
             ),
           ),
-          Expanded(
-            child: new Container(
-              color: Colors.white,
-              child: ListTile(
-                title: Row(
-                  children: [
-                    Text(
-                      "${widget.name}",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 15,
+          Flex(
+            direction: Axis.horizontal,
+            children: [
+              Expanded(
+                child: new Container(
+                  color: Colors.white,
+                  child: ListTile(
+                    title: Row(
+                      children: [
+                        Container(
+                          constraints: BoxConstraints(minWidth: 300),
+                          child: Text(
+                            "${widget.name}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
+                          ),
+                        ),
+                        new FavoriteButton(
+                          isFavorite: favourite,
+                          valueChanged: (_isFavorite) {
+                            saveFavourite();
+                            print('Is Favorite : $_isFavorite');
+                          },
+                        ),
+                      ],
+                    ),
+                    subtitle: Row(children: [
+                      Padding(
+                        padding: const EdgeInsets.only(right: 20),
+                        child: new Text(
+                          "${widget.price}",
+                          style: TextStyle(
+                            fontSize: 13,
+                          ),
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 75, right: 75),
-                    ),
-                    new FavoriteButton(
-                      isFavorite: false,
-                      valueChanged: (_isFavorite) {
-                        saveFavourite();
-                        print('Is Favorite : $_isFavorite');
-                      },
-                    ),
-                  ],
+                      new Text(
+                        "${widget.oldPrice}",
+                        style: TextStyle(
+                          fontSize: 11.5,
+                          color: Colors.red,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                    ]),
+                  ),
                 ),
-                subtitle: Row(children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20),
-                    child: new Text(
-                      "${widget.price}",
-                      style: TextStyle(
-                        fontSize: 13,
+              )
+            ],
+          ),
+          /*Container(
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+            ),
+          ),*/
+          Container(
+            height: 40,
+            color: Colors.white,
+            child: Row(
+              children: List.generate(
+                widget.size.length,
+                (index) => Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Material(
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(3),
+                      onTap: () {
+                        print("Widget" + widget.size[index].toString());
+                        this.onSizeSelected(widget.size[index].toString());
+                      },
+                      child: Ink(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: _sizeSelected == widget.size[index]
+                              ? Colors.blue
+                              : Colors.white,
+                          borderRadius: BorderRadius.circular(3),
+                          border: Border.all(color: Colors.black),
+                        ),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: Text(
+                            widget.size[index],
+                            style: Theme.of(context)
+                                .textTheme
+                                .headline6!
+                                .copyWith(
+                                    color: _sizeSelected == widget.size[index]
+                                        ? Colors.white
+                                        : Colors.black87),
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  new Text(
-                    "${widget.oldPrice}",
-                    style: TextStyle(
-                      fontSize: 11.5,
-                      color: Colors.red,
-                      decoration: TextDecoration.lineThrough,
-                    ),
-                  ),
-                ]),
+                ),
               ),
             ),
           ),
           Container(
             color: Colors.white,
             child: Padding(
-              padding: const EdgeInsets.all(8),
-            ),
-          ),
-          Container(
-            height: 30,
-            color: Colors.white,
-            child: Row(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                ),
-                Row(children: [
-                  new Text("Size:"),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                  ),
-                  Container(
-                    width: 25,
-                    height: 25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1.0),
-                    ),
-                    child: Text('S'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                  ),
-                  Container(
-                    width: 25,
-                    height: 25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1.0),
-                    ),
-                    child: Text('M'),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20),
-                  ),
-                  Container(
-                    width: 25,
-                    height: 25,
-                    alignment: Alignment.center,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(width: 1.0),
-                    ),
-                    child: Text('L'),
-                  ),
-                ]),
-              ],
-            ),
-          ),
-          Container(
-            color: Colors.white,
-            child: Padding(
               padding: const EdgeInsets.only(top: 260),
             ),
           ),
@@ -291,6 +303,7 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
               padding: const EdgeInsets.only(top: 260),
             ),
           ),
+          Text(_sizeSelected.toString()),
         ],
       ),
     );

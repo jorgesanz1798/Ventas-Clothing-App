@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ventasclothing/utils/core/google_auth.dart';
 import 'package:ventasclothing/core/providers/auth_service.dart';
 import 'package:ventasclothing/view/screens/signup_screen.dart';
@@ -180,6 +181,15 @@ class _SigninState extends State<Signin> {
                               if (user != null) {
                                 AuthService _authentication = AuthService();
                                 _authentication.addUser(user.uid);
+                                Fluttertoast.showToast(
+                                  msg: "Welcome ${user.displayName}",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.green,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
                                 Navigator.of(context).push(
                                   new MaterialPageRoute(
                                       builder: (context) => NavigationAppBar()),
