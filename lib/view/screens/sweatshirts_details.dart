@@ -63,13 +63,11 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
     User? _user = FirebaseAuth.instance.currentUser;
     return _cart
         .add({
-          'product': [
-            widget.name,
-            _sizeSelected,
-            _colorSweatshirt,
-            widget.image[0],
-            widget.price,
-          ],
+          'product': widget.name,
+          'size': _sizeSelected,
+          'color': _colorSweatshirt,
+          'image': widget.image[0],
+          'price': widget.price,
           'user': _user!.uid,
         })
         .then((value) => print('Add to cart'))

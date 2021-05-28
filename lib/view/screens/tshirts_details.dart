@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:ventasclothing/view/screens/cart_screen_wab.dart';
 
@@ -113,16 +114,23 @@ class _TshirtDetailsState extends State<TshirtDetails> {
     User? _user = FirebaseAuth.instance.currentUser;
     return _cart
         .add({
-          'product': [
-            widget.name,
-            _sizeSelected,
-            _colorSelected,
-            widget.image[_imageSelected],
-            widget.price,
-          ],
+          'product': widget.name,
+          'size': _sizeSelected,
+          'color': _colorSelected,
+          'image': widget.image[_imageSelected],
+          'price': widget.price,
           'user': _user!.uid,
         })
-        .then((value) => print("Document written with ID: " + value.id))
+        .then((value) => Fluttertoast.showToast(
+              msg: "Product added to cart",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            ))
+        // ignore: invalid_return_type_for_catch_error
         .catchError((error) => print('Failed to add product'));
   }
 

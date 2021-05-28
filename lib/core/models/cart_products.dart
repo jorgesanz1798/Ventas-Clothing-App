@@ -20,9 +20,27 @@ class _CartProductsState extends State<CartProducts> {
             .where("user", isEqualTo: "${_user.uid}")
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          print('aaaaa $snapshot');
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.data!.docs.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 150),
+              child: Center(
+                child: Column(
+                  children: [
+                    Text('Cart empty'),
+                    Icon(
+                      Icons.shopping_cart,
+                      color: Colors.black,
+                      size: 100,
+                    ),
+                  ],
+                ),
+              ),
             );
           }
           return Padding(
@@ -34,11 +52,11 @@ class _CartProductsState extends State<CartProducts> {
               ),
               children: snapshot.data!.docs.map(
                 (document) {
-                  var nameProduct = document['product'][0];
-                  var size = document['product'][1];
-                  var color = document['product'][2];
-                  var imagenProduct = document['product'][3];
-                  var priceProduct = document['product'][4];
+                  var nameProduct = document['product'];
+                  var size = document['size'];
+                  var color = document['color'];
+                  var imagenProduct = document['image'];
+                  var priceProduct = document['price'];
                   return new SingleCartProduct(
                     cartProductName: nameProduct,
                     cartProductImage: imagenProduct,
@@ -73,6 +91,20 @@ class SingleCartProduct extends StatelessWidget {
       this.cartProductSize,
       this.cartProductColor,
       this.cartProductQuantity});
+
+  void removeToCart() {
+    CollectionReference _cart = FirebaseFirestore.instance.collection('cart');
+    User? _user = FirebaseAuth.instance.currentUser;
+    _cart
+        .where("product", isEqualTo: "$cartProductName")
+        .where("color", isEqualTo: "$cartProductColor")
+        .where("size", isEqualTo: "$cartProductSize")
+        .where("user", isEqualTo: "${_user!.uid}")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) => {doc.reference.delete()});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +170,9 @@ class SingleCartProduct extends StatelessWidget {
                         Icons.delete,
                         color: Colors.red,
                       ),
-                      onPressed: () {},
+                      onPressed: () {
+                        removeToCart();
+                      },
                     ),
                   ),
                 )
