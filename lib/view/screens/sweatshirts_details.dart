@@ -69,6 +69,7 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
           'image': widget.image[0],
           'price': widget.price,
           'user': _user!.uid,
+          'quantity': 1,
         })
         .then((value) => print('Add to cart'))
         .catchError((error) => print('Failed to add product'));

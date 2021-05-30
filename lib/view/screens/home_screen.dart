@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ventasclothing/view/widgets/main_carrousel.dart';
+import 'package:ventasclothing/view/widgets/most_selled_products.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -47,6 +48,10 @@ class HomeScreen extends StatelessWidget {
               fontSize: 20,
             ),
           ),
+        ),
+        Container(
+          height: 195,
+          child: MostSelledProducts(),
         ),
         Container(
           margin: EdgeInsets.only(left: 20, right: 20),

@@ -83,6 +83,7 @@ class _CartProductsState extends State<CartProducts> {
   }
 }
 
+// ignore: must_be_immutable
 class SingleCartProduct extends StatelessWidget {
   final cartProductName;
   final cartProductImage;
@@ -147,6 +148,7 @@ class SingleCartProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double totalPrice = cartProductQuantity * cartProductPrice;
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -187,7 +189,7 @@ class SingleCartProduct extends StatelessWidget {
                   ),
                   Row(
                     children: [
-                      Text("$cartProductPrice"),
+                      Text(totalPrice.toStringAsFixed(2)),
                       new IconButton(
                         icon: Icon(Icons.remove_circle),
                         onPressed: () {
