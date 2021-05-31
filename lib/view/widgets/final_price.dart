@@ -8,7 +8,7 @@ class TotalPrice extends StatefulWidget {
 }
 
 class _TotalPriceState extends State<TotalPrice> {
-  var totalPrice;
+  double totalPrice = 0.0;
 
   void obtenerPrecioTotal() async {
     CollectionReference _cart = FirebaseFirestore.instance.collection('cart');
@@ -33,13 +33,12 @@ class _TotalPriceState extends State<TotalPrice> {
         },
       );
     });
-    return this.totalPrice;
   }
 
   @override
   Widget build(BuildContext context) {
     obtenerPrecioTotal();
-    if (totalPrice == null || totalPrice == 0) {
+    if (totalPrice == 0.0) {
       return Padding(
         padding: const EdgeInsets.only(top: 100),
         child: Container(
@@ -56,7 +55,7 @@ class _TotalPriceState extends State<TotalPrice> {
             Expanded(
               child: ListTile(
                 title: new Text('Total:'),
-                subtitle: new Text(totalPrice.toString()),
+                subtitle: new Text(totalPrice.toStringAsFixed(2)),
               ),
             ),
             Expanded(

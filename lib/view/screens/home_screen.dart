@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/screens/most_selled_products_screen.dart';
+import 'package:ventasclothing/view/screens/search_screen.dart';
 import 'package:ventasclothing/view/widgets/main_carrousel.dart';
 import 'package:ventasclothing/view/widgets/most_selled_products.dart';
 
@@ -20,7 +22,14 @@ class HomeScreen extends StatelessWidget {
                     scale: 8.0,
                   ),
                   IconButton(
-                    onPressed: null,
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => new SearchScreen(),
+                        ),
+                      );
+                    },
                     icon: Icon(
                       Icons.search,
                       color: Colors.black,
@@ -53,9 +62,17 @@ class HomeScreen extends StatelessWidget {
           height: 195,
           child: MostSelledProducts(),
         ),
-        Container(
-          margin: EdgeInsets.only(left: 20, right: 20),
-          child: Text('See more ...'),
+        InkWell(
+          child: Container(
+            margin: EdgeInsets.only(left: 20, right: 20),
+            child: Text('See more ...'),
+          ),
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => new MostSelledProductsScreen()));
+          },
         ),
       ],
     );

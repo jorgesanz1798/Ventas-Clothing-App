@@ -16,9 +16,11 @@ class TshirtDetails extends StatefulWidget {
   List size = [];
   List stock = [];
   final String description;
+  final String categoria;
+  final int ventas;
 
   TshirtDetails(this.name, this.oldPrice, this.price, this.image, this.stock,
-      this.description, this.size, this.color);
+      this.description, this.size, this.color, this.categoria, this.ventas);
 
   @override
   _TshirtDetailsState createState() => _TshirtDetailsState();
@@ -26,22 +28,28 @@ class TshirtDetails extends StatefulWidget {
 
 class _TshirtDetailsState extends State<TshirtDetails> {
   var colorTshirt;
-  bool favourite = false;
+  late bool favourite;
   var _sizeSelected;
   var _colorSelected;
   var _imageSelected;
 
   void onSizeSelected(String size) {
     setState(() {
-      _sizeSelected = size;
-      print(_sizeSelected);
+      if (_sizeSelected == size) {
+        _sizeSelected = null;
+      } else {
+        _sizeSelected = size;
+      }
     });
   }
 
   void onColorSelected(String color) {
     setState(() {
-      _colorSelected = color;
-      print(_colorSelected);
+      if (_colorSelected == color) {
+        _colorSelected = null;
+      } else {
+        _colorSelected = color;
+      }
     });
   }
 
@@ -55,6 +63,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
   @override
   void initState() {
     super.initState();
+    esFavorito();
     colorTshirt = widget.image[0];
   }
 
@@ -100,22 +109,40 @@ class _TshirtDetailsState extends State<TshirtDetails> {
     CollectionReference _favourite =
         FirebaseFirestore.instance.collection('favourite');
     User? _user = FirebaseAuth.instance.currentUser;
-    return _favourite
-        .add({
-          'productName': widget.name,
-          'user': _user!.uid,
-        })
-        .then((value) => Fluttertoast.showToast(
-              msg: "Product added to favourites",
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 1,
-              backgroundColor: Colors.green,
-              textColor: Colors.white,
-              fontSize: 16.0,
-            ))
-        // ignore: invalid_return_type_for_catch_error
-        .catchError((error) => print('Failed to add product'));
+    return _favourite.add({
+      'productName': widget.name,
+      'image': widget.image,
+      'size': widget.size,
+      'categoria': widget.categoria,
+      'ventas': widget.ventas,
+      'stock': widget.stock,
+      'color': widget.color,
+      'price': widget.price,
+      'old_price': widget.oldPrice,
+      'description': widget.description,
+      'user': _user!.uid,
+    }).then((value) => Fluttertoast.showToast(
+          msg: "Product added to favourites",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        ));
+  }
+
+  Future<void> removeFavourite() async {
+    CollectionReference _cart =
+        FirebaseFirestore.instance.collection('favourite');
+    User? _user = FirebaseAuth.instance.currentUser;
+    await _cart
+        .where("productName", isEqualTo: "${widget.name}")
+        .where("user", isEqualTo: "${_user!.uid}")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) => {doc.reference.delete()});
+    });
   }
 
   Future<void> addToCart() {
@@ -144,8 +171,39 @@ class _TshirtDetailsState extends State<TshirtDetails> {
         .catchError((error) => print('Failed to add product'));
   }
 
+  Future<void> esFavorito() async {
+    CollectionReference _favourite =
+        FirebaseFirestore.instance.collection('favourite');
+    User? _user = FirebaseAuth.instance.currentUser;
+    await _favourite
+        .where("user", isEqualTo: "${_user!.uid}")
+        .where("productName", isEqualTo: "${widget.name}")
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isEmpty) {
+        setState(() {
+          this.favourite = false;
+        });
+      }
+      querySnapshot.docs.forEach(
+        (doc) => {
+          setState(() {
+            this.favourite = true;
+          }),
+        },
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    User? _user = FirebaseAuth.instance.currentUser;
+    if (_user == null) {
+      favourite = false;
+    }
+    if (_user != null) {
+      esFavorito();
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -168,38 +226,41 @@ class _TshirtDetailsState extends State<TshirtDetails> {
       bottomNavigationBar: BottomAppBar(
         child: Container(
           color: Colors.white,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-              ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  elevation: 0.2,
-                  child: new Text('Buy now'),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 4),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-              ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {
-                    addToCart();
-                  },
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  elevation: 0.2,
-                  child: new Text('Add to cart'),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () {},
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    elevation: 0.2,
+                    child: new Text('Buy now'),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                ),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () {
+                      addToCart();
+                    },
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    elevation: 0.2,
+                    child: new Text('Add to cart'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -215,7 +276,6 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                   height: 400,
                   child: PhotoView(
                     imageProvider: NetworkImage("$colorTshirt"),
-                    /*AssetImage("assets/images/originalWhite.png")*/
                     backgroundDecoration: BoxDecoration(
                       color: Colors.white,
                     ),
@@ -235,20 +295,28 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                   child: ListTile(
                     title: Row(
                       children: [
-                        Text(
-                          "${widget.name}",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 15,
+                        Container(
+                          constraints: BoxConstraints(minWidth: 160),
+                          child: Text(
+                            "${widget.name}",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                            ),
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(left: 75, right: 75),
                         ),
                         new FavoriteButton(
-                          isFavorite: false,
+                          isFavorite: favourite,
                           valueChanged: (_isFavorite) {
-                            saveFavourite();
+                            if (_isFavorite == true) {
+                              saveFavourite();
+                            }
+                            if (_isFavorite == false) {
+                              removeFavourite();
+                            }
                             print('Is Favorite : $_isFavorite');
                           },
                         ),
@@ -290,22 +358,26 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                 ]),
                 Row(children: [
                   new IconButton(
+                    iconSize: _colorSelected == widget.color[0] ? 30 : 20,
                     icon:
                         const Icon(Icons.circle_outlined, color: Colors.black),
                     color: Colors.white,
                     onPressed: () => changeToWhite(),
                   ),
                   new IconButton(
+                    iconSize: _colorSelected == widget.color[1] ? 30 : 20,
                     icon: const Icon(Icons.circle, color: Colors.black),
                     color: Colors.black,
                     onPressed: () => changeToBlack(),
                   ),
                   new IconButton(
+                    iconSize: _colorSelected == widget.color[3] ? 30 : 20,
                     icon: const Icon(Icons.circle, color: Colors.red),
                     color: Colors.black,
                     onPressed: () => changeToRed(),
                   ),
                   new IconButton(
+                    iconSize: _colorSelected == widget.color[2] ? 30 : 20,
                     icon: const Icon(Icons.circle, color: Colors.blue),
                     color: Colors.black,
                     onPressed: () => changeToBlue(),

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ventasclothing/utils/core/google_auth.dart';
+import 'package:ventasclothing/view/screens/favourite_products_screen.dart';
+import 'package:ventasclothing/view/screens/payments_cards_screen.dart';
 import 'package:ventasclothing/view/screens/signin_screen.dart';
 import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
 
@@ -17,60 +19,137 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if (_user != null) {
       return Column(
         children: [
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  height: 160,
-                  child: UserAccountsDrawerHeader(
-                    accountName: Text("${_user.displayName}"),
-                    accountEmail: Text("${_user.email}"),
-                    currentAccountPicture: GestureDetector(
-                      child: new CircleAvatar(
-                        radius: 30.0,
-                        backgroundImage: NetworkImage(
-                          "${_user.photoURL}",
-                        ),
+          Container(
+            height: 125,
+            color: Colors.blue,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          new CircleAvatar(
+                            radius: 30.0,
+                            backgroundImage: NetworkImage(
+                              "${_user.photoURL}",
+                            ),
+                          ),
+                          new Text(
+                            "${_user.displayName}",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
                       ),
-                    ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 225),
+                        child: Column(
+                          children: [
+                            IconButton(
+                              icon: Icon(Icons.exit_to_app_outlined),
+                              color: Colors.white,
+                              iconSize: 45.0,
+                              onPressed: () async {
+                                await GoogleAuthService.signOutWithGoogle(
+                                    context: context);
+                                Fluttertoast.showToast(
+                                  msg: "Session closed",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.red,
+                                  textColor: Colors.white,
+                                  fontSize: 16.0,
+                                );
+                                Navigator.of(context).push(
+                                  new MaterialPageRoute(
+                                    builder: (context) => NavigationAppBar(),
+                                  ),
+                                );
+                              },
+                            ),
+                            new Text(
+                              "Sign out",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 125,
+            child: Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.favorite_outlined),
+                        color: Colors.blue,
+                        iconSize: 45.0,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            new MaterialPageRoute(
+                              builder: (context) => FavouriteScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      new Text(
+                        "Favourites",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
-            child: Material(
-              color: Colors.transparent,
-              child: MaterialButton(
-                color: Colors.blue,
-                onPressed: () async {
-                  await GoogleAuthService.signOutWithGoogle(context: context);
-                  Fluttertoast.showToast(
-                    msg: "Session closed",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    timeInSecForIosWeb: 1,
-                    backgroundColor: Colors.red,
-                    textColor: Colors.white,
-                    fontSize: 16.0,
-                  );
-                  Navigator.of(context).push(
-                    new MaterialPageRoute(
-                      builder: (context) => NavigationAppBar(),
-                    ),
-                  );
-                },
-                minWidth: MediaQuery.of(context).size.width,
-                child: Text(
-                  "Sign out",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20.0),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.credit_card),
+                        color: Colors.blue,
+                        iconSize: 45.0,
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            new MaterialPageRoute(
+                              builder: (context) => PaymentsCardsScreen(),
+                            ),
+                          );
+                        },
+                      ),
+                      new Text(
+                        "Payment Cards",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      IconButton(
+                        icon: Icon(Icons.card_giftcard),
+                        color: Colors.blue,
+                        iconSize: 45.0,
+                        onPressed: () {},
+                      ),
+                      new Text(
+                        "Orders",
+                        style: TextStyle(color: Colors.blue),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ],

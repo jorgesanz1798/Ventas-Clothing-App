@@ -36,6 +36,8 @@ class _TshirtsState extends State<Tshirts> {
                 var description = document['description'];
                 var size = document['size'];
                 var color = document['color'];
+                var categoria = document['categoria'];
+                var ventas = document['ventas'];
                 return InkWell(
                     onTap: () => Navigator.of(context).push(
                           new MaterialPageRoute(
@@ -47,7 +49,9 @@ class _TshirtsState extends State<Tshirts> {
                                 stock,
                                 description,
                                 size,
-                                color),
+                                color,
+                                categoria,
+                                ventas),
                           ),
                         ),
                     child: CardProduct(document['imagen'][0], nameTshirt,

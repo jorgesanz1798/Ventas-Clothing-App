@@ -1,9 +1,12 @@
+import 'dart:async';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:favorite_button/favorite_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:ventasclothing/view/screens/cart_screen_wab.dart';
 
@@ -17,9 +20,20 @@ class SweatshirtsDetails extends StatefulWidget {
   List size = [];
   List stock = [];
   final String description;
+  final String categoria;
+  final int ventas;
 
-  SweatshirtsDetails(this.name, this.oldPrice, this.price, this.image,
-      this.stock, this.description, this.size, this.color);
+  SweatshirtsDetails(
+      this.name,
+      this.oldPrice,
+      this.price,
+      this.image,
+      this.stock,
+      this.description,
+      this.size,
+      this.color,
+      this.categoria,
+      this.ventas);
 
   @override
   _SweatshirtsDetailsState createState() => _SweatshirtsDetailsState();
@@ -28,7 +42,7 @@ class SweatshirtsDetails extends StatefulWidget {
 class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
   var _colorSweatshirt;
   var _sizeSelected;
-  bool favourite = false;
+  late bool favourite;
 
   void favouriteTshirt() {
     setState(() {
@@ -36,11 +50,25 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    try {
+      esFavorito();
+      build(context);
+    } catch (error) {
+      ErrorWidget.builder = (FlutterErrorDetails details) =>
+          Center(child: CircularProgressIndicator());
+    }
+  }
+
   void onSizeSelected(String size) {
-    //print("pasado" + this._sizeSelected);
     setState(() {
-      this._sizeSelected = size;
-      print("Talla" + _sizeSelected);
+      if (_sizeSelected == size) {
+        _sizeSelected = null;
+      } else {
+        _sizeSelected = size;
+      }
     });
   }
 
@@ -48,13 +76,40 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
     CollectionReference _favourite =
         FirebaseFirestore.instance.collection('favourite');
     User? _user = FirebaseAuth.instance.currentUser;
-    return _favourite
-        .add({
-          'product': [widget.name],
-          'user': _user!.uid,
-        })
-        .then((value) => print('Add to favourite'))
-        .catchError((error) => print('Failed to add product'));
+    return _favourite.add({
+      'productName': widget.name,
+      'image': widget.image,
+      'size': widget.size,
+      'categoria': widget.categoria,
+      'ventas': widget.ventas,
+      'stock': widget.stock,
+      'color': widget.color,
+      'price': widget.price,
+      'old_price': widget.oldPrice,
+      'description': widget.description,
+      'user': _user!.uid,
+    }).then((value) => Fluttertoast.showToast(
+          msg: "Product added to favourites",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        ));
+  }
+
+  Future<void> removeFavourite() async {
+    CollectionReference _cart =
+        FirebaseFirestore.instance.collection('favourite');
+    User? _user = FirebaseAuth.instance.currentUser;
+    await _cart
+        .where("productName", isEqualTo: "${widget.name}")
+        .where("user", isEqualTo: "${_user!.uid}")
+        .get()
+        .then((querySnapshot) {
+      querySnapshot.docs.forEach((doc) => {doc.reference.delete()});
+    });
   }
 
   Future<void> addToCart() {
@@ -71,12 +126,49 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
           'user': _user!.uid,
           'quantity': 1,
         })
-        .then((value) => print('Add to cart'))
+        .then((value) => Fluttertoast.showToast(
+              msg: "Product added to cart",
+              toastLength: Toast.LENGTH_SHORT,
+              gravity: ToastGravity.BOTTOM,
+              timeInSecForIosWeb: 1,
+              backgroundColor: Colors.green,
+              textColor: Colors.white,
+              fontSize: 16.0,
+            ))
+        // ignore: invalid_return_type_for_catch_error
         .catchError((error) => print('Failed to add product'));
+  }
+
+  Future<void> esFavorito() async {
+    CollectionReference _favourite =
+        FirebaseFirestore.instance.collection('favourite');
+    User? _user = FirebaseAuth.instance.currentUser;
+    await _favourite
+        .where("user", isEqualTo: "${_user!.uid}")
+        .where("productName", isEqualTo: "${widget.name}")
+        .get()
+        .then((querySnapshot) {
+      if (querySnapshot.docs.isEmpty) {
+        setState(() {
+          this.favourite = false;
+        });
+      }
+      querySnapshot.docs.forEach(
+        (doc) => {
+          setState(() {
+            this.favourite = true;
+          }),
+        },
+      );
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    User? _user = FirebaseAuth.instance.currentUser;
+    if (_user == null) {
+      favourite = false;
+    }
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.blue,
@@ -99,38 +191,43 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
       bottomNavigationBar: BottomAppBar(
         child: Container(
           color: Colors.white,
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-              ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {},
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  elevation: 0.2,
-                  child: new Text('Buy now'),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 4),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-              ),
-              Expanded(
-                child: MaterialButton(
-                  onPressed: () {
-                    addToCart();
-                  },
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  elevation: 0.2,
-                  child: new Text('Add to cart'),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () {},
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    elevation: 0.2,
+                    child: new Text('Buy now'),
+                  ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                ),
+                Expanded(
+                  child: MaterialButton(
+                    onPressed: () {
+                      if (_sizeSelected != null) {
+                        addToCart();
+                      }
+                    },
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    elevation: 0.2,
+                    child: new Text('Add to cart'),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 10, right: 10),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -149,7 +246,6 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                     images: [
                       PhotoView(
                         imageProvider: NetworkImage("${widget.image[0]}"),
-                        /*AssetImage("assets/images/originalWhite.png")*/
                         backgroundDecoration: BoxDecoration(
                           color: Colors.white,
                         ),
@@ -158,7 +254,6 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                       ),
                       PhotoView(
                         imageProvider: NetworkImage("${widget.image[1]}"),
-                        /*AssetImage("assets/images/originalWhite.png")*/
                         backgroundDecoration: BoxDecoration(
                           color: Colors.white,
                         ),
@@ -203,8 +298,12 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                         new FavoriteButton(
                           isFavorite: favourite,
                           valueChanged: (_isFavorite) {
-                            saveFavourite();
-                            print('Is Favorite : $_isFavorite');
+                            if (_isFavorite == true) {
+                              saveFavourite();
+                            }
+                            if (_isFavorite == false) {
+                              removeFavourite();
+                            }
                           },
                         ),
                       ],
@@ -233,12 +332,6 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
               )
             ],
           ),
-          /*Container(
-            color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-            ),
-          ),*/
           Container(
             height: 40,
             color: Colors.white,
@@ -251,8 +344,8 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                     child: InkWell(
                       borderRadius: BorderRadius.circular(3),
                       onTap: () {
-                        print("Widget" + widget.size[index].toString());
-                        this.onSizeSelected(widget.size[index].toString());
+                        print(widget.size[index]);
+                        onSizeSelected(widget.size[index]);
                       },
                       child: Ink(
                         height: 50,
@@ -302,7 +395,6 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
               padding: const EdgeInsets.only(top: 260),
             ),
           ),
-          Text(_sizeSelected.toString()),
         ],
       ),
     );

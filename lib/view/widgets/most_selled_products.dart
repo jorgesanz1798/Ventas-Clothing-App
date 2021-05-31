@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/screens/sweatshirts_details.dart';
 import 'package:ventasclothing/view/screens/tshirts_details.dart';
 import 'package:ventasclothing/view/widgets/card_products.dart';
 
@@ -37,18 +38,42 @@ class _MostSelledProductsState extends State<MostSelledProducts> {
                 var description = document['description'];
                 var size = document['size'];
                 var color = document['color'];
+                var categoria = document['categoria'];
+                var ventas = document['ventas'];
                 return InkWell(
                     onTap: () => Navigator.of(context).push(
                           new MaterialPageRoute(
-                            builder: (context) => new TshirtDetails(
-                                nameTshirt,
-                                oldPriceTshirt,
-                                priceTshirt,
-                                imagenTshirt,
-                                stock,
-                                description,
-                                size,
-                                color),
+                            builder: (context) {
+                              if (categoria == "camisetas") {
+                                return new TshirtDetails(
+                                    nameTshirt,
+                                    oldPriceTshirt,
+                                    priceTshirt,
+                                    imagenTshirt,
+                                    stock,
+                                    description,
+                                    size,
+                                    color,
+                                    categoria,
+                                    ventas);
+                              }
+                              if (categoria == "sudaderas") {
+                                return new SweatshirtsDetails(
+                                    nameTshirt,
+                                    oldPriceTshirt,
+                                    priceTshirt,
+                                    imagenTshirt,
+                                    stock,
+                                    description,
+                                    size,
+                                    color,
+                                    categoria,
+                                    ventas);
+                              }
+                              return Container(
+                                child: Text('Error'),
+                              );
+                            },
                           ),
                         ),
                     child: CardProduct(document['imagen'][0], nameTshirt,

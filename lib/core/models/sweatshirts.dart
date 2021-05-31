@@ -36,22 +36,28 @@ class _SweatshirtsState extends State<Sweatshirts> {
                 var description = document['description'];
                 var size = document['size'];
                 var color = document['color'];
+                var categoria = document['categoria'];
+                var ventas = document['ventas'];
                 return InkWell(
-                    onTap: () => Navigator.of(context).push(
-                          new MaterialPageRoute(
-                            builder: (context) => new SweatshirtsDetails(
-                                nameTshirt,
-                                oldPriceTshirt,
-                                priceTshirt,
-                                imagenTshirt,
-                                stock,
-                                description,
-                                size,
-                                color),
-                          ),
-                        ),
-                    child: CardProduct(document['imagen'][0], nameTshirt,
-                        priceTshirt, oldPriceTshirt));
+                  onTap: () => Navigator.of(context).push(
+                    new MaterialPageRoute(
+                      builder: (context) => new SweatshirtsDetails(
+                        nameTshirt,
+                        oldPriceTshirt,
+                        priceTshirt,
+                        imagenTshirt,
+                        stock,
+                        description,
+                        size,
+                        color,
+                        categoria,
+                        ventas,
+                      ),
+                    ),
+                  ),
+                  child: CardProduct(document['imagen'][0], nameTshirt,
+                      priceTshirt, oldPriceTshirt),
+                );
               },
             ).toList(),
           ),

@@ -20,7 +20,6 @@ class _CartProductsState extends State<CartProducts> {
             .where("user", isEqualTo: "${_user.uid}")
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          print('aaaaa $snapshot');
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
@@ -91,10 +90,12 @@ class SingleCartProduct extends StatelessWidget {
   final cartProductSize;
   final cartProductColor;
   final cartProductQuantity;
+  final cartProductCategory;
 
   SingleCartProduct(
       {this.cartProductName,
       this.cartProductImage,
+      this.cartProductCategory,
       this.cartProductPrice,
       this.cartProductSize,
       this.cartProductColor,
@@ -149,6 +150,7 @@ class SingleCartProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double totalPrice = cartProductQuantity * cartProductPrice;
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
