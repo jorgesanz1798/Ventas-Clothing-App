@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/core/models/accesories.dart';
+import 'package:ventasclothing/core/models/jacket.dart';
+import 'package:ventasclothing/core/models/shorts.dart';
 import 'package:ventasclothing/core/models/sweatshirts.dart';
+import 'package:ventasclothing/core/models/troussers.dart';
 import 'package:ventasclothing/core/models/tshirts.dart';
 
 class CategoriesScreen extends StatefulWidget {
@@ -31,25 +35,25 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
 
   void changeToTroussers() {
     setState(() {
-      categorySelected = Center(child: Text('Troussers'));
+      categorySelected = Troussers();
     });
   }
 
   void changeToShorts() {
     setState(() {
-      categorySelected = Center(child: Text('Shorts'));
+      categorySelected = Shorts();
     });
   }
 
   void changeToJacket() {
     setState(() {
-      categorySelected = Center(child: Text('Jacket'));
+      categorySelected = Jacket();
     });
   }
 
   void changeToAccesories() {
     setState(() {
-      categorySelected = Center(child: Text('Accesories'));
+      categorySelected = Accesories();
     });
   }
 

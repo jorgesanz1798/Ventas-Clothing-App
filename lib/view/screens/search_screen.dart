@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/screens/searched_products_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -32,6 +33,14 @@ class _SearchScreenState extends State<SearchScreen> {
                   hintText: "Search",
                   icon: Icon(Icons.search),
                 ),
+                onFieldSubmitted: (value) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => new SearchedProductsSreen(value),
+                    ),
+                  );
+                },
               ),
             ),
           ),

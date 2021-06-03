@@ -63,8 +63,14 @@ class _TshirtDetailsState extends State<TshirtDetails> {
   @override
   void initState() {
     super.initState();
-    esFavorito();
     colorTshirt = widget.image[0];
+    try {
+      esFavorito();
+      build(context);
+    } catch (error) {
+      ErrorWidget.builder = (FlutterErrorDetails details) =>
+          Center(child: CircularProgressIndicator());
+    }
   }
 
   void changeToWhite() {
@@ -236,7 +242,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                 Expanded(
                   child: MaterialButton(
                     onPressed: () {},
-                    color: Colors.blue,
+                    color: _user != null ? Colors.blue : Colors.grey,
                     textColor: Colors.white,
                     elevation: 0.2,
                     child: new Text('Buy now'),
@@ -248,9 +254,11 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                 Expanded(
                   child: MaterialButton(
                     onPressed: () {
-                      addToCart();
+                      if (_sizeSelected != null) {
+                        addToCart();
+                      }
                     },
-                    color: Colors.blue,
+                    color: _user != null ? Colors.blue : Colors.grey,
                     textColor: Colors.white,
                     elevation: 0.2,
                     child: new Text('Add to cart'),
@@ -392,11 +400,11 @@ class _TshirtDetailsState extends State<TshirtDetails> {
               padding: const EdgeInsets.all(8),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Container(
-              height: 40,
-              color: Colors.white,
+          Container(
+            height: 40,
+            color: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
               child: Row(
                 children: List.generate(
                   widget.size.length,

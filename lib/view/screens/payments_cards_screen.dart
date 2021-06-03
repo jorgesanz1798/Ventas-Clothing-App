@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ventasclothing/core/models/payments_cards.dart';
+import 'package:ventasclothing/view/widgets/payment_card.dart';
 
 class PaymentsCardsScreen extends StatelessWidget {
   @override
@@ -11,7 +11,7 @@ class PaymentsCardsScreen extends StatelessWidget {
         toolbarHeight: 80,
         actions: <Widget>[],
       ),
-      body: PaymentsCards(),
+      body: PaymentsCardBuildScreen(),
     );
   }
 }

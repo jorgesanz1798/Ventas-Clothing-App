@@ -201,7 +201,7 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                 Expanded(
                   child: MaterialButton(
                     onPressed: () {},
-                    color: Colors.blue,
+                    color: _user != null ? Colors.blue : Colors.grey,
                     textColor: Colors.white,
                     elevation: 0.2,
                     child: new Text('Buy now'),
@@ -217,7 +217,7 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                         addToCart();
                       }
                     },
-                    color: Colors.blue,
+                    color: _user != null ? Colors.blue : Colors.grey,
                     textColor: Colors.white,
                     elevation: 0.2,
                     child: new Text('Add to cart'),

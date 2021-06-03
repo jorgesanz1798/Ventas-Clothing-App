@@ -13,10 +13,10 @@ class AddCreditCardScreen extends StatefulWidget {
 }
 
 class _AddCreditCardScreenState extends State<AddCreditCardScreen> {
-  String cardNumber = '';
-  String cardHolderName = '';
-  String cvvNumber = '';
-  String expiryDate = '';
+  String cardNumber = "";
+  String cardHolderName = "";
+  String cvvNumber = "";
+  String expiryDate = "";
   bool showBackView = false;
 
   void onCreditCardModel(CreditCardModel creditCardModel) {
@@ -69,8 +69,34 @@ class _AddCreditCardScreenState extends State<AddCreditCardScreen> {
               padding: const EdgeInsets.only(bottom: 30, left: 5, right: 5),
               child: MaterialButton(
                 onPressed: () {
-                  savePaymentCard();
-                  Navigator.of(context).pop();
+                  if (cardNumber.isNotEmpty &&
+                      expiryDate.isNotEmpty &&
+                      cardHolderName.isNotEmpty &&
+                      cvvNumber.isNotEmpty) {
+                    savePaymentCard();
+                    Navigator.of(context).pop();
+                  }
+                  if (cardNumber.length < 16) {
+                    Fluttertoast.showToast(
+                      msg: "Error card number not valid",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  } else {
+                    Fluttertoast.showToast(
+                      msg: "Error to add payment card",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.green,
+                      textColor: Colors.white,
+                      fontSize: 16.0,
+                    );
+                  }
                 },
                 color: Colors.blue,
                 textColor: Colors.white,

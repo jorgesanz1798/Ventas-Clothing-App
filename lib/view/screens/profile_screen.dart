@@ -16,7 +16,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     User? _user = FirebaseAuth.instance.currentUser;
-    if (_user != null) {
+    if (_user != null && _user.emailVerified) {
       return Column(
         children: [
           Container(
@@ -155,34 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ],
       );
     } else {
-      return Container(
-        child: Column(
-          children: [
-            Padding(padding: const EdgeInsets.only(top: 25)),
-            Row(
-              children: [
-                Expanded(
-                  child: MaterialButton(
-                    child: new Text(
-                      'Sign in / Sign up',
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    onPressed: () => Navigator.of(context).push(
-                      new MaterialPageRoute(
-                        builder: (context) => new Signin(),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
+      return Signin();
     }
   }
 }

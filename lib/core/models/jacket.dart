@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:ventasclothing/view/screens/tshirts_details.dart';
 import 'package:ventasclothing/view/widgets/card_products.dart';
 
-class Tshirts extends StatefulWidget {
+class Jacket extends StatefulWidget {
   @override
-  _TshirtsState createState() => _TshirtsState();
+  _JacketState createState() => _JacketState();
 }
 
-class _TshirtsState extends State<Tshirts> {
+class _JacketState extends State<Jacket> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('camisetas')
-          .where("categoria", isEqualTo: "camisetas")
+          .where("categoria", isEqualTo: "shorts")
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
         if (!snapshot.hasData) {

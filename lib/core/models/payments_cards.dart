@@ -64,7 +64,7 @@ class _PaymentsCardsState extends State<PaymentsCards> {
             );
           }
           return Padding(
-            padding: EdgeInsets.only(top: 25),
+            padding: EdgeInsets.only(top: 10),
             child: GridView(
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 1,
@@ -72,7 +72,16 @@ class _PaymentsCardsState extends State<PaymentsCards> {
               ),
               children: snapshot.data!.docs.map(
                 (document) {
-                  return new Container();
+                  var cardNumber = document['cardNumber'];
+                  var cardHolderName = document['cardHolderName'];
+                  var cvvNumber = document['cvvNumber'];
+                  var expiryDate = document['expiryDate'];
+                  return new SinglePaymentCard(
+                    cardNumber,
+                    cardHolderName,
+                    cvvNumber,
+                    expiryDate,
+                  );
                 },
               ).toList(),
             ),
@@ -81,5 +90,88 @@ class _PaymentsCardsState extends State<PaymentsCards> {
       );
     }
     return Text('No has iniciado sesion');
+  }
+}
+
+class SinglePaymentCard extends StatelessWidget {
+  final cardNumber;
+  final cardHolderName;
+  final cvvNumber;
+  final expiryDate;
+
+  SinglePaymentCard(
+      this.cardNumber, this.cardHolderName, this.cvvNumber, this.expiryDate);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        color: Colors.grey[100],
+        height: 10,
+        child: Row(
+          children: [
+            Container(
+              width: 80,
+              constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
+              child: Icon(
+                Icons.credit_card,
+                color: Colors.black,
+                size: 100,
+              ),
+            ),
+            Padding(padding: const EdgeInsets.only(right: 25)),
+            Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                width: 180,
+                constraints: BoxConstraints(minWidth: 180, maxWidth: 180),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(padding: const EdgeInsets.only(top: 25)),
+                    Text(
+                      cardNumber,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      cardHolderName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      expiryDate,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(padding: const EdgeInsets.only(right: 25)),
+            new Column(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: new IconButton(
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
