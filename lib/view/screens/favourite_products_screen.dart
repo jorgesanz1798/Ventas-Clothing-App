@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ventasclothing/core/models/favourites.dart';
+import 'package:ventasclothing/view/screens/search_screen.dart';
 
 class FavouriteScreen extends StatelessWidget {
   @override
@@ -11,7 +12,14 @@ class FavouriteScreen extends StatelessWidget {
         toolbarHeight: 80,
         actions: <Widget>[
           new IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new SearchScreen(),
+                ),
+              );
+            },
             icon: Icon(Icons.search),
           ),
         ],

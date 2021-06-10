@@ -1,5 +1,3 @@
-import 'dart:async';
-
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:carousel_pro/carousel_pro.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:ventasclothing/view/screens/buy_now_screen.dart';
 import 'package:ventasclothing/view/screens/cart_screen_wab.dart';
+import 'package:ventasclothing/view/screens/search_screen.dart';
 
 // ignore: must_be_immutable
 class SweatshirtsDetails extends StatefulWidget {
@@ -24,16 +24,17 @@ class SweatshirtsDetails extends StatefulWidget {
   final int ventas;
 
   SweatshirtsDetails(
-      this.name,
-      this.oldPrice,
-      this.price,
-      this.image,
-      this.stock,
-      this.description,
-      this.size,
-      this.color,
-      this.categoria,
-      this.ventas);
+    this.name,
+    this.oldPrice,
+    this.price,
+    this.image,
+    this.stock,
+    this.description,
+    this.size,
+    this.color,
+    this.categoria,
+    this.ventas,
+  );
 
   @override
   _SweatshirtsDetailsState createState() => _SweatshirtsDetailsState();
@@ -43,6 +44,7 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
   var _colorSweatshirt;
   var _sizeSelected;
   late bool favourite;
+  var _quantity = 1;
 
   void favouriteTshirt() {
     setState(() {
@@ -124,7 +126,7 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
           'image': widget.image[0],
           'price': widget.price,
           'user': _user!.uid,
-          'quantity': 1,
+          'quantity': _quantity,
         })
         .then((value) => Fluttertoast.showToast(
               msg: "Product added to cart",
@@ -163,11 +165,22 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
     });
   }
 
+  void addToCount() {
+    _quantity = _quantity + 1;
+  }
+
+  void substractToCount() {
+    _quantity = _quantity - 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     User? _user = FirebaseAuth.instance.currentUser;
     if (_user == null) {
       favourite = false;
+    }
+    if (_user != null) {
+      esFavorito();
     }
     return Scaffold(
       appBar: AppBar(
@@ -176,7 +189,14 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
         toolbarHeight: 80,
         actions: <Widget>[
           new IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new SearchScreen(),
+                ),
+              );
+            },
             icon: Icon(Icons.search),
           ),
           new IconButton(
@@ -200,7 +220,23 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                 ),
                 Expanded(
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_sizeSelected != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => new BuyNowScreen(
+                              widget.name,
+                              widget.image[0],
+                              widget.price,
+                              _sizeSelected,
+                              widget.color[0],
+                              _quantity,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     color: _user != null ? Colors.blue : Colors.grey,
                     textColor: Colors.white,
                     elevation: 0.2,
@@ -213,8 +249,21 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                 Expanded(
                   child: MaterialButton(
                     onPressed: () {
-                      if (_sizeSelected != null) {
+                      if (_sizeSelected != null &&
+                          _user != null &&
+                          _user.emailVerified) {
                         addToCart();
+                      }
+                      if (_sizeSelected == null) {
+                        Fluttertoast.showToast(
+                          msg: "Select a size",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
                       }
                     },
                     color: _user != null ? Colors.blue : Colors.grey,
@@ -295,17 +344,19 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                             ),
                           ),
                         ),
-                        new FavoriteButton(
-                          isFavorite: favourite,
-                          valueChanged: (_isFavorite) {
-                            if (_isFavorite == true) {
-                              saveFavourite();
-                            }
-                            if (_isFavorite == false) {
-                              removeFavourite();
-                            }
-                          },
-                        ),
+                        _user == null
+                            ? Container()
+                            : new FavoriteButton(
+                                isFavorite: favourite,
+                                valueChanged: (_isFavorite) {
+                                  if (_isFavorite == true) {
+                                    saveFavourite();
+                                  }
+                                  if (_isFavorite == false) {
+                                    removeFavourite();
+                                  }
+                                },
+                              ),
                       ],
                     ),
                     subtitle: Row(children: [
@@ -319,7 +370,7 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
                         ),
                       ),
                       new Text(
-                        "${widget.oldPrice}",
+                        widget.oldPrice == 0 ? "" : "${widget.oldPrice}" + "€",
                         style: TextStyle(
                           fontSize: 11.5,
                           color: Colors.red,
@@ -332,42 +383,71 @@ class _SweatshirtsDetailsState extends State<SweatshirtsDetails> {
               )
             ],
           ),
+          _user == null
+              ? Container()
+              : Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Text('Quantity: '),
+                      ),
+                      new IconButton(
+                        icon: Icon(Icons.remove_circle),
+                        onPressed: () {
+                          if (_quantity > 1) {
+                            substractToCount();
+                          }
+                        },
+                      ),
+                      new Text("$_quantity"),
+                      new IconButton(
+                        icon: Icon(Icons.add_circle),
+                        onPressed: () => addToCount(),
+                      ),
+                    ],
+                  ),
+                ),
           Container(
             height: 40,
             color: Colors.white,
-            child: Row(
-              children: List.generate(
-                widget.size.length,
-                (index) => Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Material(
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(3),
-                      onTap: () {
-                        print(widget.size[index]);
-                        onSizeSelected(widget.size[index]);
-                      },
-                      child: Ink(
-                        height: 50,
-                        width: 50,
-                        decoration: BoxDecoration(
-                          color: _sizeSelected == widget.size[index]
-                              ? Colors.blue
-                              : Colors.white,
-                          borderRadius: BorderRadius.circular(3),
-                          border: Border.all(color: Colors.black),
-                        ),
-                        child: Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            widget.size[index],
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline6!
-                                .copyWith(
-                                    color: _sizeSelected == widget.size[index]
-                                        ? Colors.white
-                                        : Colors.black87),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Row(
+                children: List.generate(
+                  widget.size.length,
+                  (index) => Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Material(
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(3),
+                        onTap: () {
+                          print(widget.size[index]);
+                          onSizeSelected(widget.size[index]);
+                        },
+                        child: Ink(
+                          height: 50,
+                          width: 50,
+                          decoration: BoxDecoration(
+                            color: _sizeSelected == widget.size[index]
+                                ? Colors.blue
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(3),
+                            border: Border.all(color: Colors.black),
+                          ),
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: Text(
+                              widget.size[index],
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline6!
+                                  .copyWith(
+                                      color: _sizeSelected == widget.size[index]
+                                          ? Colors.white
+                                          : Colors.black87),
+                            ),
                           ),
                         ),
                       ),

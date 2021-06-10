@@ -12,7 +12,7 @@ class _CartState extends State<Cart> {
   @override
   Widget build(BuildContext context) {
     User? _user = FirebaseAuth.instance.currentUser;
-    if (_user != null) {
+    if (_user != null && _user.emailVerified) {
       return Column(
         children: <Widget>[
           Container(
@@ -28,7 +28,15 @@ class _CartState extends State<Cart> {
       );
     }
     return Container(
-      child: Center(child: Text("Sign in to add products to cart.")),
+      child: Center(
+        child: Text(
+          "Sign in to add products to cart.",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+        ),
+      ),
     );
   }
 }

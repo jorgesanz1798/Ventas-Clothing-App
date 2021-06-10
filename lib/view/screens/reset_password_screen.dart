@@ -40,85 +40,93 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Padding(
-        padding: const EdgeInsets.only(top: 70),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: <Widget>[
-              SizedBox(
-                height: 80,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 25),
-                child: Container(
-                  alignment: Alignment.topCenter,
-                  child: Image.asset(
-                    'assets/images/banner.png',
-                    scale: 8.0,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        elevation: 1,
+        toolbarHeight: 80,
+        actions: <Widget>[],
+      ),
+      body: Container(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 70),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: <Widget>[
+                SizedBox(
+                  height: 80,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 25),
+                  child: Container(
+                    alignment: Alignment.topCenter,
+                    child: Image.asset(
+                      'assets/images/banner.png',
+                      scale: 8.0,
+                    ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14.0, 8.0, 14.0, 8.0),
-                child: Material(
-                  borderRadius: BorderRadius.circular(10.0),
-                  color: Colors.grey.withOpacity(0.3),
-                  elevation: 0.0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 12.0),
-                    child: TextFormField(
-                      controller: _email,
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        hintText: "Email",
-                        icon: Icon(Icons.alternate_email),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(14.0, 8.0, 14.0, 8.0),
+                  child: Material(
+                    borderRadius: BorderRadius.circular(10.0),
+                    color: Colors.grey.withOpacity(0.3),
+                    elevation: 0.0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 12.0),
+                      child: TextFormField(
+                        controller: _email,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "Email",
+                          icon: Icon(Icons.alternate_email),
+                        ),
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            String pattern =
+                                r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                            RegExp regex = new RegExp(pattern);
+                            if (!regex.hasMatch(value))
+                              return 'Please make sure your email address is valid';
+                            else
+                              return null;
+                          }
+                        },
                       ),
-                      validator: (value) {
-                        if (value!.isEmpty) {
-                          String pattern =
-                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                          RegExp regex = new RegExp(pattern);
-                          if (!regex.hasMatch(value))
-                            return 'Please make sure your email address is valid';
-                          else
-                            return null;
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
+                  child: Material(
+                    color: Colors.transparent,
+                    child: MaterialButton(
+                      color: Colors.blue,
+                      onPressed: () async {
+                        if (validateForm() == true) {
+                          if (resetPasswordSuccessful == true) {
+                            Navigator.of(context).pushReplacement(
+                                new MaterialPageRoute(
+                                    builder: (BuildContext context) =>
+                                        NavigationAppBar()));
+                          }
                         }
                       },
+                      minWidth: MediaQuery.of(context).size.width,
+                      child: Text(
+                        "Reset your password",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(20.0, 8.0, 20.0, 8.0),
-                child: Material(
-                  color: Colors.transparent,
-                  child: MaterialButton(
-                    color: Colors.blue,
-                    onPressed: () async {
-                      if (validateForm() == true) {
-                        if (resetPasswordSuccessful == true) {
-                          Navigator.of(context).pushReplacement(
-                              new MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                      NavigationAppBar()));
-                        }
-                      }
-                    },
-                    minWidth: MediaQuery.of(context).size.width,
-                    child: Text(
-                      "Reset your password",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20.0),
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -5,6 +5,7 @@ import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ventasclothing/utils/core/google_auth.dart';
 import 'package:ventasclothing/core/providers/auth_service.dart';
+import 'package:ventasclothing/view/screens/reset_password_screen.dart';
 import 'package:ventasclothing/view/screens/signup_screen.dart';
 import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
 
@@ -34,10 +35,53 @@ class _SigninState extends State<Signin> {
     try {
       await auth.signInWithEmailAndPassword(
           email: _email.text, password: _password.text);
+      User? user = auth.currentUser;
       signInSuccessful = true;
+      if (user != null && !user.emailVerified) {
+        signInSuccessful = false;
+        Fluttertoast.showToast(
+          msg: "Complete email verification",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        Fluttertoast.showToast(
+          msg: "Wrong password",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+      if (e.code == 'invalid-email') {
+        Fluttertoast.showToast(
+          msg: "Invalid email",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
       if (e.code == 'user-not-found') {
-        print('User not found.');
+        Fluttertoast.showToast(
+          msg: "User not found",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       }
     } catch (e) {
       print(e);
@@ -115,8 +159,6 @@ class _SigninState extends State<Signin> {
                       validator: (value) {
                         if (value!.isEmpty) {
                           return "The password field cannot be empty";
-                        } else if (value.length < 6) {
-                          return "the password has to be at least 6 characters long";
                         }
                         return null;
                       },
@@ -159,8 +201,10 @@ class _SigninState extends State<Signin> {
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: InkWell(
-                      onTap: () =>
-                          auth.sendPasswordResetEmail(email: _email.text),
+                      onTap: () => Navigator.of(context).push(
+                          new MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  ResetPasswordScreen())),
                       child: Text(
                         "Forgot password",
                         textAlign: TextAlign.center,
@@ -195,7 +239,7 @@ class _SigninState extends State<Signin> {
                       AuthService _authentication = AuthService();
                       _authentication.addUser(user.uid);
                       Fluttertoast.showToast(
-                        msg: "Welcome ${user.displayName}",
+                        msg: "Welcome",
                         toastLength: Toast.LENGTH_SHORT,
                         gravity: ToastGravity.BOTTOM,
                         timeInSecForIosWeb: 1,

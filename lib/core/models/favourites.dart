@@ -159,7 +159,7 @@ class FavouriteProduct extends StatelessWidget {
           ),
         ),
         child: Container(
-          color: Colors.grey[100],
+          decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
           height: 10,
           child: Row(
             children: [

@@ -42,7 +42,7 @@ class CardProduct extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "$oldPriceProd" + "€",
+                    oldPriceProd == 0 ? "" : "$oldPriceProd" + "€",
                     style: TextStyle(
                       fontSize: 11.5,
                       color: Colors.red,

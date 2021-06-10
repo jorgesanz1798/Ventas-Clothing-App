@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/screens/check_out_screen.dart';
 
 class TotalPrice extends StatefulWidget {
   @override
@@ -60,7 +61,9 @@ class _TotalPriceState extends State<TotalPrice> {
             ),
             Expanded(
               child: new MaterialButton(
-                onPressed: () {},
+                onPressed: () {
+                  CheckOutScreen();
+                },
                 color: Colors.blue,
                 child: new Text(
                   'Check out',

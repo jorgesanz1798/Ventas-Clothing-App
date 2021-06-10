@@ -3,12 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ventasclothing/view/screens/add_paycard_screen.dart';
 
-class PaymentsCards extends StatefulWidget {
+class BuyNowPaymentsCards extends StatefulWidget {
   @override
-  _PaymentsCardsState createState() => _PaymentsCardsState();
+  _BuyNowPaymentsCardsState createState() => _BuyNowPaymentsCardsState();
 }
 
-class _PaymentsCardsState extends State<PaymentsCards> {
+class _BuyNowPaymentsCardsState extends State<BuyNowPaymentsCards> {
   @override
   Widget build(BuildContext context) {
     User? _user = FirebaseAuth.instance.currentUser;
@@ -27,7 +27,7 @@ class _PaymentsCardsState extends State<PaymentsCards> {
           }
           if (snapshot.data!.docs.isEmpty) {
             return Padding(
-              padding: const EdgeInsets.only(top: 200),
+              padding: const EdgeInsets.only(top: 60),
               child: Center(
                 child: Column(
                   children: [
@@ -75,11 +75,17 @@ class _PaymentsCardsState extends State<PaymentsCards> {
                   var cardHolderName = document['cardHolderName'];
                   var cvvNumber = document['cvvNumber'];
                   var expiryDate = document['expiryDate'];
-                  return new SinglePaymentCard(
-                    cardNumber,
-                    cardHolderName,
-                    cvvNumber,
-                    expiryDate,
+                  return Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 17),
+                        child: Container(
+                          height: 150,
+                          child: new BuyNowSinglePaymentCard(cardNumber,
+                              cardHolderName, cvvNumber, expiryDate),
+                        ),
+                      ),
+                    ],
                   );
                 },
               ).toList(),
@@ -92,33 +98,36 @@ class _PaymentsCardsState extends State<PaymentsCards> {
   }
 }
 
-class SinglePaymentCard extends StatelessWidget {
+// ignore: must_be_immutable
+class BuyNowSinglePaymentCard extends StatefulWidget {
   final cardNumber;
   final cardHolderName;
   final cvvNumber;
   final expiryDate;
 
-  SinglePaymentCard(
-      this.cardNumber, this.cardHolderName, this.cvvNumber, this.expiryDate);
+  BuyNowSinglePaymentCard(
+    this.cardNumber,
+    this.cardHolderName,
+    this.cvvNumber,
+    this.expiryDate,
+  );
 
-  void removePayment() {
-    CollectionReference _cart =
-        FirebaseFirestore.instance.collection('payments_cards');
-    User? _user = FirebaseAuth.instance.currentUser;
-    _cart
-        .where("cardNumber", isEqualTo: "$cardNumber")
-        .where("cardHolderName", isEqualTo: "$cardHolderName")
-        .where("cvvNumber", isEqualTo: "$cvvNumber")
-        .where("expiryDate", isEqualTo: "$expiryDate")
-        .where("user", isEqualTo: "${_user!.uid}")
-        .get()
-        .then((querySnapshot) {
-      querySnapshot.docs.forEach((doc) => {doc.reference.delete()});
+  @override
+  _BuyNowSinglePaymentCardState createState() =>
+      _BuyNowSinglePaymentCardState();
+}
+
+class _BuyNowSinglePaymentCardState extends State<BuyNowSinglePaymentCard> {
+  bool selected = false;
+  void selectPaymentCard() {
+    setState(() {
+      selected = !selected;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    print(selected.toString());
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
@@ -126,6 +135,25 @@ class SinglePaymentCard extends StatelessWidget {
         height: 10,
         child: Row(
           children: [
+            Padding(padding: const EdgeInsets.only(right: 25)),
+            new Column(
+              children: [
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 40),
+                    child: new IconButton(
+                      icon: Icon(
+                        selected == true ? Icons.circle : Icons.circle_outlined,
+                        color: selected == true ? Colors.blue : Colors.black,
+                      ),
+                      onPressed: () {
+                        selectPaymentCard();
+                      },
+                    ),
+                  ),
+                )
+              ],
+            ),
             Container(
               width: 80,
               constraints: BoxConstraints(minWidth: 80, maxWidth: 80),
@@ -146,19 +174,19 @@ class SinglePaymentCard extends StatelessWidget {
                   children: [
                     Padding(padding: const EdgeInsets.only(top: 25)),
                     Text(
-                      cardNumber,
+                      widget.cardNumber,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      cardHolderName,
+                      widget.cardHolderName,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      expiryDate,
+                      widget.expiryDate,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                       ),
@@ -166,25 +194,6 @@ class SinglePaymentCard extends StatelessWidget {
                   ],
                 ),
               ),
-            ),
-            Padding(padding: const EdgeInsets.only(right: 25)),
-            new Column(
-              children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: new IconButton(
-                      icon: Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                      onPressed: () {
-                        removePayment();
-                      },
-                    ),
-                  ),
-                )
-              ],
             ),
           ],
         ),

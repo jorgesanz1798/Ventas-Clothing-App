@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ventasclothing/view/screens/search_screen.dart';
 import 'package:ventasclothing/view/widgets/cart.dart';
 
 class CartScreenWab extends StatelessWidget {
@@ -11,7 +12,14 @@ class CartScreenWab extends StatelessWidget {
         toolbarHeight: 80,
         actions: <Widget>[
           new IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new SearchScreen(),
+                ),
+              );
+            },
             icon: Icon(Icons.search),
           ),
         ],

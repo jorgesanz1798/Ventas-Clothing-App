@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ventasclothing/view/screens/cart_screen_wab.dart';
+import 'package:ventasclothing/view/screens/search_screen.dart';
 import 'package:ventasclothing/view/screens/sweatshirts_details.dart';
 import 'package:ventasclothing/view/screens/tshirts_details.dart';
 import 'package:ventasclothing/view/widgets/card_products.dart';
@@ -21,7 +22,14 @@ class _MostSelledProductsScreenState extends State<MostSelledProductsScreen> {
         toolbarHeight: 80,
         actions: <Widget>[
           new IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new SearchScreen(),
+                ),
+              );
+            },
             icon: Icon(Icons.search),
           ),
           new IconButton(

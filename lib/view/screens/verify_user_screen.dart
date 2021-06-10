@@ -6,10 +6,6 @@ import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
 
 // ignore: must_be_immutable
 class VerifyUserScreen extends StatefulWidget {
-  String name;
-
-  VerifyUserScreen(this.name);
-
   @override
   _VerifyUserScreenState createState() => _VerifyUserScreenState();
 }
@@ -52,16 +48,19 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Container(
-          child: Column(
-            children: [
-              Text('Verify your email'),
-              Icon(
-                Icons.mail,
-                color: Colors.black,
-                size: 100,
-              ),
-            ],
+        child: Padding(
+          padding: const EdgeInsets.only(top: 250),
+          child: Container(
+            child: Column(
+              children: [
+                Icon(
+                  Icons.mail,
+                  color: Colors.black,
+                  size: 100,
+                ),
+                Text('Verify your email'),
+              ],
+            ),
           ),
         ),
       ),

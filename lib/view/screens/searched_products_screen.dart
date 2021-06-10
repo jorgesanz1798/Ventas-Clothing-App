@@ -37,8 +37,7 @@ class _SearchedProductsSreenState extends State<SearchedProductsSreen> {
       body: new StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('camisetas')
-            .where('name', isGreaterThanOrEqualTo: searchKey)
-            .where('name', isLessThan: searchKey! + 'z')
+            .where('keywords', arrayContains: searchKey)
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {

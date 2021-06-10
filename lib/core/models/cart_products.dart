@@ -154,7 +154,7 @@ class SingleCartProduct extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Container(
-        color: Colors.grey[100],
+        decoration: BoxDecoration(border: Border.all(color: Colors.blue)),
         height: 10,
         child: Row(
           children: [

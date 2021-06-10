@@ -72,23 +72,15 @@ class _AddCreditCardScreenState extends State<AddCreditCardScreen> {
                   if (cardNumber.isNotEmpty &&
                       expiryDate.isNotEmpty &&
                       cardHolderName.isNotEmpty &&
-                      cvvNumber.isNotEmpty) {
+                      cvvNumber.isNotEmpty &&
+                      cardNumber.length > 18) {
                     savePaymentCard();
+                    print(expiryDate);
                     Navigator.of(context).pop();
                   }
-                  if (cardNumber.length < 16) {
+                  if (cardNumber.length < 19) {
                     Fluttertoast.showToast(
                       msg: "Error card number not valid",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 1,
-                      backgroundColor: Colors.green,
-                      textColor: Colors.white,
-                      fontSize: 16.0,
-                    );
-                  } else {
-                    Fluttertoast.showToast(
-                      msg: "Error to add payment card",
                       toastLength: Toast.LENGTH_SHORT,
                       gravity: ToastGravity.BOTTOM,
                       timeInSecForIosWeb: 1,

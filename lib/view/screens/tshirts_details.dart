@@ -4,7 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:ventasclothing/view/screens/buy_now_screen.dart';
 import 'package:ventasclothing/view/screens/cart_screen_wab.dart';
+import 'package:ventasclothing/view/screens/search_screen.dart';
 
 // ignore: must_be_immutable
 class TshirtDetails extends StatefulWidget {
@@ -19,8 +21,18 @@ class TshirtDetails extends StatefulWidget {
   final String categoria;
   final int ventas;
 
-  TshirtDetails(this.name, this.oldPrice, this.price, this.image, this.stock,
-      this.description, this.size, this.color, this.categoria, this.ventas);
+  TshirtDetails(
+    this.name,
+    this.oldPrice,
+    this.price,
+    this.image,
+    this.stock,
+    this.description,
+    this.size,
+    this.color,
+    this.categoria,
+    this.ventas,
+  );
 
   @override
   _TshirtDetailsState createState() => _TshirtDetailsState();
@@ -32,6 +44,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
   var _sizeSelected;
   var _colorSelected;
   var _imageSelected;
+  var _quantity = 1;
 
   void onSizeSelected(String size) {
     setState(() {
@@ -162,7 +175,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
           'image': widget.image[_imageSelected],
           'price': widget.price,
           'user': _user!.uid,
-          'quantity': 1,
+          'quantity': _quantity,
         })
         .then((value) => Fluttertoast.showToast(
               msg: "Product added to cart",
@@ -201,6 +214,14 @@ class _TshirtDetailsState extends State<TshirtDetails> {
     });
   }
 
+  void addToCount() {
+    _quantity = _quantity + 1;
+  }
+
+  void substractToCount() {
+    _quantity = _quantity - 1;
+  }
+
   @override
   Widget build(BuildContext context) {
     User? _user = FirebaseAuth.instance.currentUser;
@@ -217,7 +238,14 @@ class _TshirtDetailsState extends State<TshirtDetails> {
         toolbarHeight: 80,
         actions: <Widget>[
           new IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => new SearchScreen(),
+                ),
+              );
+            },
             icon: Icon(Icons.search),
           ),
           new IconButton(
@@ -241,7 +269,45 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                 ),
                 Expanded(
                   child: MaterialButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_sizeSelected == null) {
+                        Fluttertoast.showToast(
+                          msg: "Select a size",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                      if (_colorSelected == null) {
+                        Fluttertoast.showToast(
+                          msg: "Select a color",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                      if (_sizeSelected != null && _colorSelected != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => new BuyNowScreen(
+                              widget.name,
+                              widget.image[_imageSelected],
+                              widget.price,
+                              _sizeSelected,
+                              _colorSelected,
+                              _quantity,
+                            ),
+                          ),
+                        );
+                      }
+                    },
                     color: _user != null ? Colors.blue : Colors.grey,
                     textColor: Colors.white,
                     elevation: 0.2,
@@ -254,8 +320,33 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                 Expanded(
                   child: MaterialButton(
                     onPressed: () {
-                      if (_sizeSelected != null) {
+                      if (_sizeSelected != null &&
+                          _colorSelected != null &&
+                          _user != null &&
+                          _user.emailVerified) {
                         addToCart();
+                      }
+                      if (_sizeSelected == null) {
+                        Fluttertoast.showToast(
+                          msg: "Select a size",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                      if (_colorSelected == null) {
+                        Fluttertoast.showToast(
+                          msg: "Select a color",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
                       }
                     },
                     color: _user != null ? Colors.blue : Colors.grey,
@@ -316,18 +407,20 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                         Padding(
                           padding: const EdgeInsets.only(left: 75, right: 75),
                         ),
-                        new FavoriteButton(
-                          isFavorite: favourite,
-                          valueChanged: (_isFavorite) {
-                            if (_isFavorite == true) {
-                              saveFavourite();
-                            }
-                            if (_isFavorite == false) {
-                              removeFavourite();
-                            }
-                            print('Is Favorite : $_isFavorite');
-                          },
-                        ),
+                        _user == null
+                            ? Container()
+                            : new FavoriteButton(
+                                isFavorite: favourite,
+                                valueChanged: (_isFavorite) {
+                                  if (_isFavorite == true) {
+                                    saveFavourite();
+                                  }
+                                  if (_isFavorite == false) {
+                                    removeFavourite();
+                                  }
+                                  print('Is Favorite : $_isFavorite');
+                                },
+                              ),
                       ],
                     ),
                     subtitle: Row(children: [
@@ -341,7 +434,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                         ),
                       ),
                       new Text(
-                        "${widget.oldPrice}",
+                        widget.oldPrice == 0 ? "" : "${widget.oldPrice}" + "€",
                         style: TextStyle(
                           fontSize: 11.5,
                           color: Colors.red,
@@ -354,12 +447,38 @@ class _TshirtDetailsState extends State<TshirtDetails> {
               ),
             ],
           ),
+          _user == null
+              ? Container()
+              : Container(
+                  color: Colors.white,
+                  child: Row(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Text('Quantity: '),
+                      ),
+                      new IconButton(
+                        icon: Icon(Icons.remove_circle),
+                        onPressed: () {
+                          if (_quantity > 1) {
+                            substractToCount();
+                          }
+                        },
+                      ),
+                      new Text("$_quantity"),
+                      new IconButton(
+                        icon: Icon(Icons.add_circle),
+                        onPressed: () => addToCount(),
+                      ),
+                    ],
+                  ),
+                ),
           Container(
             color: Colors.white,
             child: Row(
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.only(left: 20),
+                  padding: const EdgeInsets.only(left: 15),
                 ),
                 Row(children: [
                   new Text("Color:"),

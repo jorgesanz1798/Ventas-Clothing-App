@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ventasclothing/utils/core/email_auth.dart';
 import 'package:ventasclothing/view/screens/verify_user_screen.dart';
 
@@ -12,9 +14,10 @@ class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
 
   TextEditingController _email = TextEditingController();
-  TextEditingController _name = TextEditingController();
   TextEditingController _password = TextEditingController();
   TextEditingController _confirmpassword = TextEditingController();
+
+  static bool existUser = false;
 
   @override
   void initState() {
@@ -26,6 +29,19 @@ class _SignupState extends State<Signup> {
       return true;
     }
     return false;
+  }
+
+  existsUser(uid) async {
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
+    await users.get().then(
+          (QuerySnapshot querySnapshot) => querySnapshot.docs.forEach(
+            (doc) {
+              if (_email.text == doc["email"]) {
+                existUser = true;
+              }
+            },
+          ),
+        );
   }
 
   @override
@@ -68,34 +84,6 @@ class _SignupState extends State<Signup> {
                             child: Image.asset(
                               'assets/images/banner.png',
                               scale: 8.0,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.fromLTRB(14.0, 8.0, 14.0, 8.0),
-                          child: Material(
-                            borderRadius: BorderRadius.circular(10.0),
-                            color: Colors.grey.withOpacity(0.3),
-                            elevation: 0.0,
-                            child: Padding(
-                              padding: const EdgeInsets.only(left: 12.0),
-                              child: TextFormField(
-                                controller: _name,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: "Name",
-                                  icon: Icon(Icons.person_outline),
-                                ),
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "The user's name field cannot be empty";
-                                  } else if (value.length < 6) {
-                                    return "the user's name has to be at least 6 characters long";
-                                  }
-                                  return null;
-                                },
-                              ),
                             ),
                           ),
                         ),
@@ -196,14 +184,28 @@ class _SignupState extends State<Signup> {
                               child: MaterialButton(
                             color: Colors.blue,
                             onPressed: () async {
+                              await existsUser(_email.text);
                               if (validateForm() == true) {
-                                await EmailAuthService
-                                    .registerWithEmailAndPassword(
-                                        _email.text, _password.text);
-                                Navigator.of(context).pushReplacement(
-                                    new MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            VerifyUserScreen(_name.text)));
+                                if (existUser == true) {
+                                  Fluttertoast.showToast(
+                                    msg: "Ya hay una cuenta con ese correo",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.BOTTOM,
+                                    timeInSecForIosWeb: 1,
+                                    backgroundColor: Colors.green,
+                                    textColor: Colors.white,
+                                    fontSize: 16.0,
+                                  );
+                                }
+                                if (existUser == false) {
+                                  await EmailAuthService
+                                      .registerWithEmailAndPassword(
+                                          _email.text, _password.text);
+                                  Navigator.of(context).pushReplacement(
+                                      new MaterialPageRoute(
+                                          builder: (BuildContext context) =>
+                                              VerifyUserScreen()));
+                                }
                               }
                             },
                             minWidth: MediaQuery.of(context).size.width,
