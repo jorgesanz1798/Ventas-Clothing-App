@@ -61,7 +61,7 @@ class _SignupState extends State<Signup> {
               child: Container(
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(0),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.grey,

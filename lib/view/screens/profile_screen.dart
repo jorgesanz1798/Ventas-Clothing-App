@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ventasclothing/utils/core/google_auth.dart';
 import 'package:ventasclothing/view/screens/favourite_products_screen.dart';
+import 'package:ventasclothing/view/screens/orders_screen.dart';
 import 'package:ventasclothing/view/screens/payments_cards_screen.dart';
 import 'package:ventasclothing/view/screens/signin_screen.dart';
 import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
@@ -33,11 +34,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           new CircleAvatar(
                             radius: 30.0,
                             backgroundImage: NetworkImage(
-                              "${_user.photoURL}",
+                              _user.photoURL == null
+                                  ? "https://firebasestorage.googleapis.com/v0/b/ventas-clothing-app.appspot.com/o/user3.png?alt=media&token=3cb0a2e7-1f67-470f-bc81-cb3758efb055"
+                                  : "${_user.photoURL}",
                             ),
                           ),
                           new Text(
-                            "${_user.displayName}",
+                            _user.displayName == null
+                                ? ""
+                                : "${_user.displayName}",
                             style: TextStyle(color: Colors.white),
                           ),
                         ],
@@ -140,7 +145,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         icon: Icon(Icons.card_giftcard),
                         color: Colors.blue,
                         iconSize: 45.0,
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            new MaterialPageRoute(
+                              builder: (context) => OrdersScreen(),
+                            ),
+                          );
+                        },
                       ),
                       new Text(
                         "Orders",

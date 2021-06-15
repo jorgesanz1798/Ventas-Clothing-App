@@ -270,7 +270,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                 Expanded(
                   child: MaterialButton(
                     onPressed: () {
-                      if (_sizeSelected == null) {
+                      if (_sizeSelected == null && _user != null) {
                         Fluttertoast.showToast(
                           msg: "Select a size",
                           toastLength: Toast.LENGTH_SHORT,
@@ -281,7 +281,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                           fontSize: 16.0,
                         );
                       }
-                      if (_colorSelected == null) {
+                      if (_colorSelected == null && _user != null) {
                         Fluttertoast.showToast(
                           msg: "Select a color",
                           toastLength: Toast.LENGTH_SHORT,
@@ -292,7 +292,9 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                           fontSize: 16.0,
                         );
                       }
-                      if (_sizeSelected != null && _colorSelected != null) {
+                      if (_sizeSelected != null &&
+                          _colorSelected != null &&
+                          _user != null) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -305,6 +307,17 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                               _quantity,
                             ),
                           ),
+                        );
+                      }
+                      if (_user == null) {
+                        Fluttertoast.showToast(
+                          msg: "Sign in to buy",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
                         );
                       }
                     },
@@ -326,7 +339,18 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                           _user.emailVerified) {
                         addToCart();
                       }
-                      if (_sizeSelected == null) {
+                      if (_user == null) {
+                        Fluttertoast.showToast(
+                          msg: "Sign in to buy",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.BOTTOM,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0,
+                        );
+                      }
+                      if (_sizeSelected == null && _user != null) {
                         Fluttertoast.showToast(
                           msg: "Select a size",
                           toastLength: Toast.LENGTH_SHORT,
@@ -337,7 +361,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                           fontSize: 16.0,
                         );
                       }
-                      if (_colorSelected == null) {
+                      if (_colorSelected == null && _user != null) {
                         Fluttertoast.showToast(
                           msg: "Select a color",
                           toastLength: Toast.LENGTH_SHORT,
@@ -427,7 +451,7 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                       Padding(
                         padding: const EdgeInsets.only(right: 20),
                         child: new Text(
-                          "${widget.price}",
+                          "${widget.price}" + "€",
                           style: TextStyle(
                             fontSize: 13,
                           ),
@@ -533,7 +557,6 @@ class _TshirtDetailsState extends State<TshirtDetails> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(3),
                         onTap: () {
-                          print(widget.size[index]);
                           onSizeSelected(widget.size[index]);
                         },
                         child: Ink(

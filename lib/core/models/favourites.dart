@@ -13,7 +13,6 @@ class _FavouritesState extends State<Favourites> {
   @override
   Widget build(BuildContext context) {
     User? _user = FirebaseAuth.instance.currentUser;
-    print(_user!.uid);
     // ignore: unnecessary_null_comparison
     if (_user != null) {
       return StreamBuilder(

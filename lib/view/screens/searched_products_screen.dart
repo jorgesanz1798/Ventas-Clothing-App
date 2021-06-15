@@ -45,6 +45,34 @@ class _SearchedProductsSreenState extends State<SearchedProductsSreen> {
               child: CircularProgressIndicator(),
             );
           }
+          if (snapshot.data!.docs.isEmpty) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 200),
+              child: Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.engineering_rounded,
+                      color: Colors.black,
+                      size: 100,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        'The product searched not macth wit any product',
+                        softWrap: true,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }
           return Padding(
             padding: EdgeInsets.only(top: 25, left: 20, right: 20),
             child: GridView.count(

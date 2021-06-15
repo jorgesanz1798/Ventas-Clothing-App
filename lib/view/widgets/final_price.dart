@@ -56,13 +56,18 @@ class _TotalPriceState extends State<TotalPrice> {
             Expanded(
               child: ListTile(
                 title: new Text('Total:'),
-                subtitle: new Text(totalPrice.toStringAsFixed(2)),
+                subtitle: new Text(totalPrice.toStringAsFixed(2) + "€"),
               ),
             ),
             Expanded(
               child: new MaterialButton(
                 onPressed: () {
-                  CheckOutScreen();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CheckOutScreen(),
+                    ),
+                  );
                 },
                 color: Colors.blue,
                 child: new Text(

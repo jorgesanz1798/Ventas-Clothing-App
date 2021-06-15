@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ventasclothing/view/shared/navigation_app_bar.dart';
 
 // ignore: must_be_immutable
@@ -36,6 +37,15 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
     await user.reload();
     if (user.emailVerified) {
       timer.cancel();
+      Fluttertoast.showToast(
+        msg: "Welcome",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
           builder: (BuildContext context) => NavigationAppBar(),
@@ -58,7 +68,13 @@ class _VerifyUserScreenState extends State<VerifyUserScreen> {
                   color: Colors.black,
                   size: 100,
                 ),
-                Text('Verify your email'),
+                Text(
+                  'Verify your email',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
           ),

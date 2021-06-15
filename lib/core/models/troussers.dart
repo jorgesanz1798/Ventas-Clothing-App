@@ -1,3 +1,4 @@
+/* Esta página muestra todos los pantalones que se encuentran en la base de datos. */
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:ventasclothing/view/screens/tshirts_details.dart';
@@ -12,16 +13,19 @@ class _TroussersState extends State<Troussers> {
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
+      /* Aqui se obtienen los pantalones. */
       stream: FirebaseFirestore.instance
           .collection('camisetas')
           .where("categoria", isEqualTo: "troussers")
           .snapshots(),
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        /* Pantalla mientras cargan los productos */
         if (!snapshot.hasData) {
           return Center(
             child: CircularProgressIndicator(),
           );
         }
+        /* En caso de que no existan pantalones mostrará una pantalla de mantenimiento */
         if (snapshot.data!.docs.isEmpty) {
           return Padding(
             padding: const EdgeInsets.only(top: 200),
@@ -45,6 +49,7 @@ class _TroussersState extends State<Troussers> {
             ),
           );
         }
+        /* Si existen pantalones aqui los muestra */
         return Padding(
           padding: EdgeInsets.only(top: 25, left: 20, right: 20),
           child: GridView.count(
@@ -62,6 +67,7 @@ class _TroussersState extends State<Troussers> {
                 var categoria = document['categoria'];
                 var ventas = document['ventas'];
                 return InkWell(
+                    /* Aqui navegamos a la página de detalles del producto */
                     onTap: () => Navigator.of(context).push(
                           new MaterialPageRoute(
                             builder: (context) => new TshirtDetails(

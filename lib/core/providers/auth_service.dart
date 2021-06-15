@@ -22,6 +22,7 @@ class AuthService {
           .add({
             "id": user!.uid,
             "email": user!.email,
+            "name": user!.displayName,
           })
           .then((value) => print('User added'))
           .catchError((error) => print('Failed to add user'));

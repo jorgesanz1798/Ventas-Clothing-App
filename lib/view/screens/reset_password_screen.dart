@@ -105,6 +105,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       color: Colors.blue,
                       onPressed: () async {
                         if (validateForm() == true) {
+                          resetPassword();
                           if (resetPasswordSuccessful == true) {
                             Navigator.of(context).pushReplacement(
                                 new MaterialPageRoute(
