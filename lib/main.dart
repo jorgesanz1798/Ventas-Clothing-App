@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'utils/view/theme_manager.dart';
 import 'view/shared/navigation_app_bar.dart';
+import 'package:shimmer/shimmer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,8 +37,12 @@ class MyApp extends StatelessWidget {
                   body: Center(
                     child: Padding(
                       padding: const EdgeInsets.only(right: 40, left: 40),
-                      child: SvgPicture.asset(
-                        "assets/images/Logo-VC-original.svg",
+                      child: Shimmer.fromColors(
+                        baseColor: Colors.black,
+                        highlightColor: Colors.grey.shade300,
+                        child: SvgPicture.asset(
+                          "assets/images/Logo-VC-original.svg",
+                        ),
                       ),
                     ),
                   ),
