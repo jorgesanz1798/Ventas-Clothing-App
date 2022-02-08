@@ -1,6 +1,6 @@
 # Ventas Clothing
 
-Proyecto final para el final de curso de Dasarollo de Aplicaciones Multiplataforma, una app de compra de una marca de ropa creada por mí.
+Proyecto final para el final de curso de Desarollo de Aplicaciones Multiplataforma, una app de compra de una marca de ropa creada por mí.
 
 ## Prototipo
 
